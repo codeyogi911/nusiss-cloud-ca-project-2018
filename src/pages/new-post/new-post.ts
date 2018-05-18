@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ViewController, Platform, LoadingController, ToastController } from 'ionic-angular';
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
-import { Camera, CameraOptions } from '@ionic-native/camera';
+// import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+// import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Storage } from 'aws-amplify';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'page-newpost-create',
@@ -25,8 +26,8 @@ export class NewPostCreatePage {
               public navParams: NavParams,
               public viewCtrl: ViewController,
               public platform: Platform,
-              private transfer: FileTransfer,
-              private camera: Camera,
+              // private transfer: FileTransfer,
+              // private camera: Camera,
               public loadingCtrl: LoadingController,
               public toastCtrl: ToastController) {
                 this.post = {};

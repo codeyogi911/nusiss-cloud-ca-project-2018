@@ -23,7 +23,7 @@ export class Home {
 // }
   public items: any;
   public refresher: any;
-  private taskTable: string = aws_exports.aws_resource_name_prefix + '-tasks';
+  // private taskTable: string = aws_exports.aws_resource_name_prefix + '-tasks';
   private userId: string;
   constructor(public modalCtrl: ModalController,public db: DynamoDB) {
     Auth.currentCredentials()
