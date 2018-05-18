@@ -6,7 +6,9 @@ import { Auth } from 'aws-amplify';
 
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from '../pages/login/login';
-
+declare var jquery:any;
+declare var $ :any;
+// declare var window;
 @Component({
   templateUrl: 'app.html'
 })

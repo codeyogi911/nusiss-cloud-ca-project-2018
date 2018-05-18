@@ -17,11 +17,16 @@
 <ion-content padding>
   <ion-item>
     <p>{{imageURI}}</p>
-    <button ion-button color="secondary" (click)="getImage()">Get Image</button>
+    <input (change)="previewfile($event)" id="input" type="file" accept="image/jpeg, image/png" hidden/>
+    <button id="btn" ion-button color="secondary" (click)="getImage()">Get Image</button>
   </ion-item>
   <ion-item>
-    <h4>Image Preview</h4>
+    <!-- <h4>Image Preview</h4> -->
     <img src="{{imageFileName}}" *ngIf="imageFileName" alt="Ionic File" width="300" />
+  </ion-item>
+  <ion-item class="custom-item">
+    <ion-label>Description</ion-label>
+    <ion-textarea rows="5" [(ngModel)]="post.description" name="description"></ion-textarea>
   </ion-item>
   <ion-item>
     <button ion-button (click)="uploadFile()">Upload</button>

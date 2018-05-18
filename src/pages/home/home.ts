@@ -4,12 +4,23 @@ import {NewPostCreatePage} from '../new-post/new-post';
 import { Auth, Logger } from 'aws-amplify';
 const aws_exports = require('../../aws-exports').default;
 import { DynamoDB } from '../../providers/providers';
-import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 const logger = new Logger('Tasks');
+
+import Amplify, { API } from 'aws-amplify';
+Amplify.configure(aws_exports);
+
 @Component({
   templateUrl: 'home.html'
 })
 export class Home {
+//   state = {
+//   apiResponse: null,
+//   noteId: ''
+//      };
+//
+//   handleChangeNoteId = (event) => {
+//         this.setState({noteId: event});
+// }
   public items: any;
   public refresher: any;
   private taskTable: string = aws_exports.aws_resource_name_prefix + '-tasks';
@@ -33,23 +44,35 @@ export class Home {
     }
     return result.toLowerCase();
   }
-  uploadphoto(){
+  newpost() {
     let id = this.generateId();
     let addModal = this.modalCtrl.create(NewPostCreatePage, { 'id': id });
-    addModal.onDidDismiss(item => {
-      if (!item) { return; }
-      item.userId = this.userId;
-      item.created = (new Date().getTime() / 1000);
-      const params = {
-        'TableName': this.taskTable,
-        'Item': item,
-        'ConditionExpression': 'attribute_not_exists(id)'
-      };
-      this.db.getDocumentClient()
-      // .then(client => (client as DocumentClient).query(params).promise())
-      .then(client => (client as DocumentClient).put(params).promise());
-      // .then(client => (client as DocumentClient).delete(params).promise());
+    addModal.onDidDismiss(post => {
+      if (!post) { return; }
+      let newPost = {
+        body: {
+    "userID": this.userId,
+    "imagePath": id +'/image.jpeg',
+    "description": post.description,
+    "postID": id,
+    "timestamp": (new Date().getTime() / 1000)
+  }
+      }
+      const path = "/postdir";
+      if(post.isReadyToSave){
+        try {
+        const apiResponse = API.put("postdirCRUD", path, newPost)
+        console.log("response from saving note: " + apiResponse);
+        // this.setState({apiResponse});
+      } catch (e) {
+        console.log(e);
+      }}
+
     });
     addModal.present();
+
+
+    // Use the API module to save the note to the database
+
   }
  }

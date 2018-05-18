@@ -7,6 +7,8 @@
 // AWS Mobile Hub Project Constants
 const awsmobile = {
     'aws_app_analytics': 'enable',
+    'aws_cloud_logic': 'enable',
+    'aws_cloud_logic_custom': [{"id":"46by4zwre5","name":"postdirCRUD","description":"","endpoint":"https://46by4zwre5.execute-api.us-east-1.amazonaws.com/Development","region":"us-east-1","paths":["/postdir","/postdir/123"]}],
     'aws_cognito_identity_pool_id': 'us-east-1:b20a6e1d-a485-47b9-8705-2ca8803330c3',
     'aws_cognito_region': 'us-east-1',
     'aws_content_delivery': 'enable',
@@ -16,12 +18,13 @@ const awsmobile = {
     'aws_content_delivery_cloudfront_domain': 'd16eyuyxkrzfy5.cloudfront.net',
     'aws_dynamodb': 'enable',
     'aws_dynamodb_all_tables_region': 'us-east-1',
-    'aws_dynamodb_table_schemas': [{"tableName":"cloudca-mobilehub-617490318-tasks","attributes":[{"name":"userId","type":"S"},{"name":"taskId","type":"S"},{"name":"category","type":"S"},{"name":"created","type":"N"},{"name":"description","type":"S"}],"indexes":[],"region":"us-east-1","hashKey":"userId","rangeKey":"taskId"},{"tableName":"cloudca-mobilehub-617490318-AWSMobileTable","attributes":[{"name":"teamId","type":"S"},{"name":"personId","type":"S"},{"name":"email","type":"S"},{"name":"personName","type":"S"},{"name":"phone","type":"S"}],"indexes":[{"indexName":"personName-index","hashKey":"teamId","rangeKey":"personName"}],"region":"us-east-1","hashKey":"teamId","rangeKey":"personId"}],
+    'aws_dynamodb_table_schemas': [{"tableName":"cloudca-mobilehub-617490318-postdir","attributes":[{"name":"postID","type":"S"},{"name":"timestamp","type":"N"},{"name":"description","type":"S"},{"name":"imagePath","type":"S"},{"name":"userID","type":"S"}],"indexes":[],"region":"us-east-1","hashKey":"postID","rangeKey":"timestamp"}],
     'aws_mobile_analytics_app_id': '7d1f0374a46e42c6b7e1060ffaf350a4',
     'aws_mobile_analytics_app_region': 'us-east-1',
     'aws_project_id': 'caa42ebb-cf77-4978-a019-7cc9b049e299',
     'aws_project_name': 'cloud-ca-1',
     'aws_project_region': 'us-east-1',
+    'aws_resource_bucket_name': 'cloudca-deployments-mobilehub-617490318',
     'aws_resource_name_prefix': 'cloudca-mobilehub-617490318',
     'aws_sign_in_enabled': 'enable',
     'aws_user_files': 'enable',

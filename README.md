@@ -1,8 +1,9 @@
 # nusiss-cloud-ca-project-2018
+Aim of this project is to build a client side hybrid app that utilises AWS cloud native backend to deliver functionality at par with social platforms such as instagram.
 
 ### Installing Ionic CLI 3.0
 
-This starter project requires Ionic CLI 3.0, to install, run
+This project requires Ionic CLI 3.0, to install, run
 
 ```bash
 npm install -g ionic@latest

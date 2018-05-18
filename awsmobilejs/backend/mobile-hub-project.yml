@@ -2,6 +2,40 @@
 apps:
   react-native: !com.amazonaws.mobilehub.v0.AppDO {}
 features:
+  cloudlogic: !com.amazonaws.mobilehub.v0.CloudLogic 
+    components:
+      postdirCRUD: !com.amazonaws.mobilehub.v0.API 
+        attributes:
+          name: postdirCRUD
+          requires-signin: true
+          sdk-generation-stage-name: Development
+        paths:
+          /postdir: !com.amazonaws.mobilehub.v0.Function 
+            codeFilename: uploads/postdir-20180518210723.zip
+            description: 'Handler for calls to resource path : /postdir/{proxy+}'
+            enableCORS: true
+            environment: {}
+            handler: lambda.handler
+            hashcode: r3n3NXul5h0GVhUoVC6gUlN0pDTaU5Yp1CedQtukqMM=
+            memorySize: '128'
+            modified: '2018-05-18T13:08:05.103+0000'
+            name: postdir
+            runtime: nodejs6.10
+            timeout: '3'
+            version: _a3F.UVnmB4mHfmbm1xkktCi5RY8GiTI
+          '/postdir/{proxy+}': !com.amazonaws.mobilehub.v0.Function 
+            codeFilename: uploads/postdir-20180518210723.zip
+            description: 'Handler for calls to resource path : /postdir/{proxy+}'
+            enableCORS: true
+            environment: {}
+            handler: lambda.handler
+            hashcode: r3n3NXul5h0GVhUoVC6gUlN0pDTaU5Yp1CedQtukqMM=
+            memorySize: '128'
+            modified: '2018-05-18T13:08:05.103+0000'
+            name: postdir
+            runtime: nodejs6.10
+            timeout: '3'
+            version: FLcEj2p2FbcBLuyWtfboDJY5ltjG6fUp
   content-delivery: !com.amazonaws.mobilehub.v0.ContentDelivery 
     attributes:
       enabled: true
@@ -14,36 +48,16 @@ features:
         tables:
           - !com.amazonaws.mobilehub.v0.NoSQLTable 
             attributes:
-              category: S
-              created: N
               description: S
-              taskId: S
-              userId: S
-            hashKeyName: userId
+              imagePath: S
+              postID: S
+              timestamp: N
+              userID: S
+            hashKeyName: postID
             hashKeyType: S
-            rangeKeyName: taskId
-            rangeKeyType: S
-            tableName: ___DYNAMIC_PREFIX___-tasks
-            tablePrivacy: public
-          - !com.amazonaws.mobilehub.v0.NoSQLTable 
-            attributes:
-              email: S
-              personId: S
-              personName: S
-              phone: S
-              teamId: S
-            hashKeyName: teamId
-            hashKeyType: S
-            indexes:
-              - !com.amazonaws.mobilehub.v0.NoSQLIndex 
-                hashKeyName: teamId
-                hashKeyType: S
-                indexName: personName-index
-                rangeKeyName: personName
-                rangeKeyType: S
-            rangeKeyName: personId
-            rangeKeyType: S
-            tableName: ___DYNAMIC_PREFIX___-AWSMobileTable
+            rangeKeyName: timestamp
+            rangeKeyType: N
+            tableName: ___DYNAMIC_PREFIX___-postdir
             tablePrivacy: public
   mobile-analytics: !com.amazonaws.mobilehub.v0.Pinpoint 
     components:
