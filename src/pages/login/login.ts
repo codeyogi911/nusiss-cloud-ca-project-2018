@@ -19,12 +19,12 @@ export class LoginDetails {
   templateUrl: 'login.html'
 })
 export class LoginPage {
-  
+
   public loginDetails: LoginDetails;
 
   constructor(public navCtrl: NavController,
               public loadingCtrl: LoadingController) {
-    this.loginDetails = new LoginDetails(); 
+    this.loginDetails = new LoginDetails();
   }
 
   login() {
@@ -44,7 +44,10 @@ export class LoginPage {
           this.navCtrl.setRoot(TabsPage);
         }
       })
-      .catch(err => logger.debug('errrror', err))
+      .catch(err => {
+        logger.debug('errrror', err);
+        this.navCtrl.push(SignupPage);
+      })
       .then(() => loading.dismiss());
   }
 

@@ -30,6 +30,7 @@
     "@ionic/storage": "2.1.3",
     "aws-amplify": "^0.2.15",
     "aws-amplify-angular": "^0.1.1",
+    "awsmobile-cli": "^1.1.4",
     "cordova-ios": "4.5.4",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-ionic-keyboard": "^2.0.5",

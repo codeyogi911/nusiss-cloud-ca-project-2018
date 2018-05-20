@@ -17,6 +17,7 @@ import { SettingsPage } from '../pages/settings/settings';
 import { AboutPage } from '../pages/about/about';
 import { AccountPage } from '../pages/account/account';
 import { TabsPage } from '../pages/tabs/tabs';
+import { ProfilePage } from '../pages/profile/profile';
 // import { TasksPage } from '../pages/tasks/tasks';
 import { NewPostCreatePage } from '../pages/new-post/new-post';
 import { Home } from '../pages/home/home';
@@ -42,6 +43,7 @@ Amplify.configure(aws_exports);
     AboutPage,
     AccountPage,
     TabsPage,
+    ProfilePage,
     // TasksPage,
     NewPostCreatePage,
     Home
@@ -61,6 +63,7 @@ Amplify.configure(aws_exports);
     AboutPage,
     AccountPage,
     TabsPage,
+    ProfilePage,
     // TasksPage,
     NewPostCreatePage,
     Home
