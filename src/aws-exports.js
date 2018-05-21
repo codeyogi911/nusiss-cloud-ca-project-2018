@@ -7,6 +7,8 @@
 // AWS Mobile Hub Project Constants
 const awsmobile = {
     'aws_app_analytics': 'enable',
+    'aws_cloud_logic': 'enable',
+    'aws_cloud_logic_custom': [{"id":"18z7eu85z1","name":"postDir1CRUD","description":"","endpoint":"https://18z7eu85z1.execute-api.us-east-1.amazonaws.com/Development","region":"us-east-1","paths":["/postDir1","/postDir1/123"]},{"id":"m6fthn7ik8","name":"sampleCloudApi","description":"","endpoint":"https://m6fthn7ik8.execute-api.us-east-1.amazonaws.com/Development","region":"us-east-1","paths":["/items","/items/123"]}],
     'aws_cognito_identity_pool_id': 'us-east-1:1619101a-813a-4af1-93c0-ad2bbbdad562',
     'aws_cognito_region': 'us-east-1',
     'aws_content_delivery': 'enable',
@@ -22,6 +24,7 @@ const awsmobile = {
     'aws_project_id': '52a031b7-c242-4e72-89f8-2cff1e9c53fb',
     'aws_project_name': 'nusiss-cloud-ca',
     'aws_project_region': 'us-east-1',
+    'aws_resource_bucket_name': 'nusisscloudca-deployments-mobilehub-1796201548',
     'aws_resource_name_prefix': 'nusisscloudca-mobilehub-1796201548',
     'aws_sign_in_enabled': 'enable',
     'aws_user_files': 'enable',

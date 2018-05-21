@@ -12,20 +12,20 @@
 
 <ion-content class="cards-bg social-cards">
 
-<ion-card>
+<ion-card *ngFor="let post of posts;">
 
   <ion-item>
     <ion-avatar item-start>
-      <img src="assets/img/marty-avatar.png">
+      <!-- <img src="assets/img/marty-avatar.png"> -->
     </ion-avatar>
-    <h2>Marty McFly</h2>
+    <h2>{{post.userID}}</h2>
     <p>November 5, 1955</p>
   </ion-item>
 
-  <img src="assets/img/advance-card-bttf.png">
+  <img src={{post.image}}> 
 
   <ion-card-content>
-    <p>Wait a minute. Wait a minute, Doc. Uhhh... Are you telling me that you built a time machine... out of a DeLorean?! Whoa. This is heavy.</p>
+    <p>{{post.desc}}</p>
   </ion-card-content>
 
   <ion-row>
@@ -51,7 +51,7 @@
 </ion-card>
 
 
-<ion-card>
+<!-- <ion-card>
 
   <ion-item>
     <ion-avatar item-start>
@@ -126,7 +126,7 @@
     </ion-col>
   </ion-row>
 
-</ion-card>
+</ion-card> -->
 
 
 </ion-content>

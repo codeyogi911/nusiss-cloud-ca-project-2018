@@ -116,10 +116,18 @@ async uploadFile() {
   {
     let name = this.postID+'/image.jpeg';
   const access = { level: "protected" }; // note the access path
-  Storage.put(name, file, access);
+  Storage.put(name, file, access)
+  .then (result => {
+    this.post.isReadyToSave = true;
+    this.viewCtrl.dismiss(this.post);
+    console.log(result);
+  })
+        .catch(err => {
+          console.log(err);
+          alert('Something went wrong cannot create post!')
+        });
   // this.isReadyToSave = true;
-  this.post.isReadyToSave = true;
-  this.viewCtrl.dismiss(this.post);
+
 }
 }
 
