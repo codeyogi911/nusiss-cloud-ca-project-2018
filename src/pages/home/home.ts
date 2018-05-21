@@ -59,39 +59,14 @@ export class Home{
     addModal.onDidDismiss(post => {
       if (!post) { return; }
 this.savePost(id, post.description);
-  //       var params = {
-  //         TableName:table,
-  //         Item:{
-  //         "userID": this.state.userID,
-  //         "description": post.description,
-  //         "postID": id,
-  //         "timestamp": (new Date().getTime() / 1000)
-  //       }
-  // };
-  //   console.log("Adding a new item...");
-  //   console.log(this.db.list-tables);
-  //   this.db.getDocumentClient()
-  //   .then(client => (client as DocumentClient).put(params).promise())
-  //       .then(data => this.refreshTasks())
-  //       .catch(err => logger.debug('add task error', err));
-//     .then(client => (client as DocumentClient).put(params, function(err, data) {
-//     if (err) {
-//         console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-//     } else {
-//         console.log("Added item:", JSON.stringify(data, null, 2));
-//     }
-// }));
+
 });
     addModal.present();
 
 }
 
 async savePost(id, description) {
-  // event.preventDefault();
-
-  // const { userID, posts } = this.state;
   const posts = this.posts;
-  // const userID = this.username;
   const postID = id;
   const desc = description;
   const timestamp = new Date().getTime();
@@ -102,9 +77,8 @@ async savePost(id, description) {
   this.newPost.TimeElapsed = this.getTimeElapsed(this.newPost.timestamp);
   this.newPost.avatarPhoto = this.getAvatar(this.userID);
   posts.push(this.newPost);
-  // this.refs.newTodo.value = '';
+  this.sortArray(posts);
   this.posts = posts;
-  // this.setState({ posts, userID });
 }
 
 async getPosts() {
@@ -131,16 +105,10 @@ async getPosts() {
     that.getfromS3(element);
     element.postDate = that.formatDate(element.timestamp);
     element.TimeElapsed = that.getTimeElapsed(element.timestamp);
-    // that.getAvatar(element);
-    // var t = that.getAvatar(that.userID);
   });
     this.posts = data.Items;
-    // this.getfromS3();
-// }
+    this.sortArray(this.posts);
 
-              // data.Items.forEach(function(item) {
-              //     console.log(" -", item.year + ": " + item.title);
-              // });
                 }
   }));
 
@@ -159,14 +127,14 @@ getAvatar(id){
 }
 
 getfromS3(post){
-  Storage.get(this.userID + '/avatar.jpeg', { level: 'public' })
+  Storage.get(this.userID + '/avatar_thumb.webp', { level: 'public' })
     .then(url => post.avatarPhoto = (url as string));
     // .then(url => {
     // console.log('avatarPhoto ' + url as string);
     // var ret = (url as string);
     // return ret;
   // });
-  Storage.get(post.postID+'/image.jpeg', { level: 'protected' })
+  Storage.get(post.postID+'/image_thumb.webp', { level: 'protected' })
     .then(result => {console.log(result);
       post.image = result;
     return result;
@@ -174,7 +142,15 @@ getfromS3(post){
     .catch(err => console.log(err));
 // }
 }
-
+sortArray(inArray){
+  inArray.sort(function compare(a,b) {
+  if (a.timestamp > b.timestamp)
+  return -1;
+  if (a.timestamp < b.timestamp)
+  return 1;
+  return 0;
+  });
+}
 formatDate(date){
   var options = {
     weekday: "long", year: "numeric", month: "short",

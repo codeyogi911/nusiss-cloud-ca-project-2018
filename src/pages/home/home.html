@@ -11,8 +11,10 @@
 </ion-header>
 
 <ion-content class="cards-bg social-cards">
-
-<ion-card *ngFor="let post of posts;">
+<ion-grid>
+  <ion-row wrap>
+    <ion-col *ngFor="let post of posts;">
+<ion-card>
 
   <ion-item>
     <ion-avatar item-start>
@@ -49,7 +51,9 @@
   </ion-row>
 
 </ion-card>
-
+</ion-col>
+</ion-row>
+</ion-grid>
 
 <!-- <ion-card>
 
