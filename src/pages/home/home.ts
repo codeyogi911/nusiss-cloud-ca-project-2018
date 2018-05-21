@@ -22,18 +22,20 @@ export class Home{
   private userID: string;
   private posts: any;
   private username: string;
+  private newPost:any;
   constructor(public modalCtrl: ModalController,public db: DynamoDB) {
     Auth.currentAuthenticatedUser()
     .then(AuthenticatedUser => {
       console.log(AuthenticatedUser);
       this.username = AuthenticatedUser.username;
+      Auth.currentCredentials()
+        .then(credentials => {
+          this.userID = credentials.identityId;
+          this.getPosts();
+        })
+        .catch(err => logger.debug('get current credentials err', err));
     });
-    Auth.currentCredentials()
-      .then(credentials => {
-        this.userID = credentials.identityId;
-        this.getPosts();
-      })
-      .catch(err => logger.debug('get current credentials err', err));
+
       this.posts = [];
   }
 
@@ -89,31 +91,23 @@ async savePost(id, description) {
 
   // const { userID, posts } = this.state;
   const posts = this.posts;
-  const userID = this.username;
+  // const userID = this.username;
   const postID = id;
   const desc = description;
-  const timestamp = (new Date().getTime() / 1000);
-  const newPost = {userID, postID, desc, timestamp};
-  await API.post('postDir1CRUD', '/postDir1', { body: newPost });
-  posts.push(newPost);
+  const timestamp = new Date().getTime();
+  this.newPost = {'userID': this.username, postID, desc, timestamp};
+  await API.post('postDir1CRUD', '/postDir1', { body: this.newPost });
+  this.newPost.image = this.getfromS3(this.newPost);
+  this.newPost.postDate = this.formatDate(this.newPost.timestamp);
+  this.newPost.TimeElapsed = this.getTimeElapsed(this.newPost.timestamp);
+  this.newPost.avatarPhoto = this.getAvatar(this.userID);
+  posts.push(this.newPost);
   // this.refs.newTodo.value = '';
   this.posts = posts;
   // this.setState({ posts, userID });
 }
 
 async getPosts() {
-  // this.db.getDocumentClient()
-  // .then(client => (client as DocumentClient).scan({ TableName: 'nusisscloudca-mobilehub-1796201548-postDir1' }, function(err, data) {
-  //       if (err) {
-  //           console.log(err)
-  //           res.status(500).json({
-  //               message: "Could not load restaurants"
-  //           }).end()
-  //       } else {
-  //           res.json(data['Items'])
-  //       }
-  //   }));
-
   let queryParams = {
     TableName: 'nusisscloudca-mobilehub-1796201548-postDir1',
     KeyConditionExpression: "#userID = :userID",
@@ -132,12 +126,13 @@ async getPosts() {
     } else {
       console.log("Query succeeded.");
 
-//       var i;
-// for (i = 0; i < data.Items.length; i++) {
-    // text += cars[i] + "<br>";
     var that = this;
     data.Items.forEach(function(element){
     that.getfromS3(element);
+    element.postDate = that.formatDate(element.timestamp);
+    element.TimeElapsed = that.getTimeElapsed(element.timestamp);
+    // that.getAvatar(element);
+    // var t = that.getAvatar(that.userID);
   });
     this.posts = data.Items;
     // this.getfromS3();
@@ -153,10 +148,24 @@ async getPosts() {
   // this.posts =posts;
   // this.setState({ posts });
 }
+getAvatar(id){
+  Storage.get(id + '/avatar.jpeg', { level: 'public' })
+    // .then(url => this.avatarPhoto = (url as string));
+    .then(url => {
+    console.log('avatarPhoto ' + url as string);
+    var ret = (url as string);
+    // return ret;
+  });
+}
 
 getfromS3(post){
-  // var i;
-  // for (i = 0; i < this.posts.length; i++){
+  Storage.get(this.userID + '/avatar.jpeg', { level: 'public' })
+    .then(url => post.avatarPhoto = (url as string));
+    // .then(url => {
+    // console.log('avatarPhoto ' + url as string);
+    // var ret = (url as string);
+    // return ret;
+  // });
   Storage.get(post.postID+'/image.jpeg', { level: 'protected' })
     .then(result => {console.log(result);
       post.image = result;
@@ -166,4 +175,54 @@ getfromS3(post){
 // }
 }
 
+formatDate(date){
+  var options = {
+    weekday: "long", year: "numeric", month: "short",
+    day: "numeric", hour: "2-digit", minute: "2-digit"
+};
+  var formattedDate = new Date(date);
+  return formattedDate.toLocaleTimeString("en-us", options);
+}
+getTimeElapsed(date){
+  // Set the unit values in milliseconds.
+var msecPerMinute = 1000 * 60;
+var msecPerHour = msecPerMinute * 60;
+var msecPerDay = msecPerHour * 24;
+
+// Set a date and get the milliseconds
+// var date = new Date('6/15/1990');
+var dateMsec = new Date().getTime();
+
+// // Set the date to January 1, at midnight, of the specified year.
+// date.setMonth(0);
+// date.setDate(1);
+// date.setHours(0, 0, 0, 0);
+
+// Get the difference in milliseconds.
+var interval = dateMsec - date;
+
+// Calculate how many days the interval contains. Subtract that
+// many days from the interval to determine the remainder.
+var days = Math.floor(interval / msecPerDay );
+interval = interval - (days * msecPerDay );
+
+// Calculate the hours, minutes, and seconds.
+var hours = Math.floor(interval / msecPerHour );
+interval = interval - (hours * msecPerHour );
+
+var minutes = Math.floor(interval / msecPerMinute );
+interval = interval - (minutes * msecPerMinute );
+
+var seconds = Math.floor(interval / 1000 );
+
+// Display the result.
+if (days > 0){ return (days + " days ago")}
+else if (hours > 0){ return (hours + "h ago")}
+else if (minutes > 0){return (minutes + "min ago")}
+else if (seconds > 0){return (seconds + "sec ago")}
+// return(days + " days ago" + hours + " hours, " + minutes + " minutes, " + seconds + " seconds.");
+
+//Output: 164 days, 23 hours, 0 minutes, 0 seconds.
+
+}
 }

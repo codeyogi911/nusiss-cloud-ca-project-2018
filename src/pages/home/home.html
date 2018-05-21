@@ -16,13 +16,13 @@
 
   <ion-item>
     <ion-avatar item-start>
-      <!-- <img src="assets/img/marty-avatar.png"> -->
+      <img src={{post.avatarPhoto}}>
     </ion-avatar>
     <h2>{{post.userID}}</h2>
-    <p>November 5, 1955</p>
+    <p>{{post.postDate}}</p>
   </ion-item>
 
-  <img src={{post.image}}> 
+  <img src={{post.image}}>
 
   <ion-card-content>
     <p>{{post.desc}}</p>
@@ -43,7 +43,7 @@
     </ion-col>
     <ion-col align-self-center text-center>
       <ion-note>
-        11h ago
+        {{post.TimeElapsed}}
       </ion-note>
     </ion-col>
   </ion-row>

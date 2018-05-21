@@ -9,31 +9,31 @@ features:
           sdk-generation-stage-name: Development
         paths:
           /postDir1: !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/postDir1-20180520170548.zip
+            codeFilename: uploads/postDir1-20180521150232.zip
             description: 'Handler for calls to resource path : /postDir1/{proxy+}'
             enableCORS: true
             environment: {}
             handler: lambda.handler
-            hashcode: JMvHlqrgxQuJ6s4fVSFpR7fLl7W9+ayB1RJMSlNsK+s=
+            hashcode: DPXGHaBa9cUup/EBrmc7p7yPGVVtaJ+1WmlFbaNq+ak=
             memorySize: '128'
-            modified: '2018-05-20T09:06:52.905+0000'
+            modified: '2018-05-21T07:03:16.771+0000'
             name: postDir1
             runtime: nodejs6.10
             timeout: '3'
-            version: xNT6nPNk6hr1tP12vncLouLYy6Dne8Ug
+            version: vW8FqF40zJFW69pjP.7Q024q7SuujW.2
           '/postDir1/{proxy+}': !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/postDir1-20180520170548.zip
+            codeFilename: uploads/postDir1-20180521150232.zip
             description: 'Handler for calls to resource path : /postDir1/{proxy+}'
             enableCORS: true
             environment: {}
             handler: lambda.handler
-            hashcode: JMvHlqrgxQuJ6s4fVSFpR7fLl7W9+ayB1RJMSlNsK+s=
+            hashcode: DPXGHaBa9cUup/EBrmc7p7yPGVVtaJ+1WmlFbaNq+ak=
             memorySize: '128'
-            modified: '2018-05-20T09:06:52.905+0000'
+            modified: '2018-05-21T07:03:16.771+0000'
             name: postDir1
             runtime: nodejs6.10
             timeout: '3'
-            version: rwqEQOcUn8LamCF6W3yjHRaWZ9fH7OyX
+            version: od009GEu.pbMv903cYgYidEZnwapxNpB
       sampleCloudApi: !com.amazonaws.mobilehub.v0.API 
         attributes:
           name: sampleCloudApi
@@ -41,31 +41,31 @@ features:
           sdk-generation-stage-name: Development
         paths:
           /items: !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/sampleLambda-20180521103022.zip
+            codeFilename: uploads/sampleLambda-20180521171758.zip
             description: 'Handler for calls to resource path : /items/{proxy+}'
             enableCORS: true
             environment: {}
             handler: lambda.handler
-            hashcode: Czy9Gka2uCeIEmtyL8buNEscJDF5hdx0GzbUrgRPW8Y=
+            hashcode: OUL7mPUKC5xNgDAXHvsveVQLmd6xLyDUFB35uc/qW1w=
             memorySize: '128'
-            modified: '2018-05-21T02:31:11.048+0000'
+            modified: '2018-05-21T09:18:44.439+0000'
             name: sampleLambda
             runtime: nodejs6.10
             timeout: '3'
-            version: 5pk0t_dwYZykoDmwRinmBqQ7TX9CcuDw
+            version: N.IKX8EQr8NpYmZrAZezSMyyR3DJGEMH
           '/items/{proxy+}': !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/sampleLambda-20180521103022.zip
+            codeFilename: uploads/sampleLambda-20180521171758.zip
             description: 'Handler for calls to resource path : /items/{proxy+}'
             enableCORS: true
             environment: {}
             handler: lambda.handler
-            hashcode: Czy9Gka2uCeIEmtyL8buNEscJDF5hdx0GzbUrgRPW8Y=
+            hashcode: OUL7mPUKC5xNgDAXHvsveVQLmd6xLyDUFB35uc/qW1w=
             memorySize: '128'
-            modified: '2018-05-21T02:31:11.048+0000'
+            modified: '2018-05-21T09:18:44.439+0000'
             name: sampleLambda
             runtime: nodejs6.10
             timeout: '3'
-            version: TjhylYNqxDPtrHnNp05h15nGX4Mk8lPJ
+            version: Zowd6lkAkIC_OGo0Bo2FGyH_NEs1pqms
   content-delivery: !com.amazonaws.mobilehub.v0.ContentDelivery 
     attributes:
       enabled: true
@@ -107,20 +107,6 @@ features:
             rangeKeyName: personId
             rangeKeyType: S
             tableName: ___DYNAMIC_PREFIX___-AWSMobileTable
-            tablePrivacy: public
-          - !com.amazonaws.mobilehub.v0.NoSQLTable 
-            attributes:
-              desc: S
-              description: S
-              postID: S
-              time: N
-              timestamp: N
-              userID: S
-            hashKeyName: userID
-            hashKeyType: S
-            rangeKeyName: postID
-            rangeKeyType: S
-            tableName: ___DYNAMIC_PREFIX___-postDir
             tablePrivacy: public
   mobile-analytics: !com.amazonaws.mobilehub.v0.Pinpoint 
     components:

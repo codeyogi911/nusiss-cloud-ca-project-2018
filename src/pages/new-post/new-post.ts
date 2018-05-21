@@ -108,6 +108,10 @@ previewfile(event){
 }
 
 async uploadFile() {
+  let loading = this.loadingCtrl.create({
+    content: 'Uploading...'
+  });
+  loading.present();
   const file = this.selectedFile;
   if(file == null){
     return alert('No file selected.');
@@ -116,9 +120,10 @@ async uploadFile() {
   {
     let name = this.postID+'/image.jpeg';
   const access = { level: "protected" }; // note the access path
-  Storage.put(name, file, access)
+  await Storage.put(name, file, access)
   .then (result => {
     this.post.isReadyToSave = true;
+    loading.dismiss();
     this.viewCtrl.dismiss(this.post);
     console.log(result);
   })

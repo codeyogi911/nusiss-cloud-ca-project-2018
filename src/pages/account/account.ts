@@ -40,7 +40,7 @@ export class AccountPage {
   }
 
   refreshAvatar() {
-      Storage.get(this.userId + '/avatar', {})
+      Storage.get(this.userId + '/avatar.jpeg', { level: 'public' })
         .then(url => this.avatarPhoto = (url as string));
     }
 
@@ -86,7 +86,7 @@ export class AccountPage {
 
     const file = files[0];
     const { type } = file;
-    Storage.put(this.userId + '/avatar', file, { contentType: type })
+    Storage.put(this.userId + '/avatar.jpeg', file, { contentType: type })
       .then(() => this.refreshAvatar())
       .catch(err => logger.error(err));
   }
@@ -98,7 +98,7 @@ export class AccountPage {
       });
       loading.present();
 
-      Storage.put(this.userId + '/avatar', this.selectedPhoto, { contentType: 'image/jpeg' })
+      Storage.put(this.userId + '/avatar.jpeg', this.selectedPhoto, { contentType: 'image/jpeg' })
         .then(() => {
           this.refreshAvatar()
           loading.dismiss();
