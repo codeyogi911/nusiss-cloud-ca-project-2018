@@ -1,105 +1,5 @@
 --- !com.amazonaws.mobilehub.v0.Project 
 features:
-  cloudlogic: !com.amazonaws.mobilehub.v0.CloudLogic 
-    components:
-      imageplumber: !com.amazonaws.mobilehub.v0.API 
-        attributes:
-          name: imageplumber
-          requires-signin: true
-          sdk-generation-stage-name: Development
-        paths:
-          /resize: !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/imageplumber-20180522054423.zip
-            description: 'Handler for calls to resource path : /resize/{proxy+}'
-            enableCORS: true
-            environment:
-              BUCKET: nusisscloudca-userfiles-mobilehub-1796201548
-            handler: lambda.handler
-            hashcode: MMUM/7V8NTpl2PcAp1HIwbvTk1oCjqeSUH0ZoFuWyfA=
-            memorySize: '1536'
-            modified: '2018-05-21T21:44:54.783+0000'
-            name: imageplumber
-            runtime: nodejs6.10
-            timeout: '10'
-            version: MTbe.fJ_HNLTutxx5G4BhC4bYJMYruvO
-          '/resize/{proxy+}': !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/imageplumber-20180522054423.zip
-            description: 'Handler for calls to resource path : /resize/{proxy+}'
-            enableCORS: true
-            environment:
-              BUCKET: nusisscloudca-userfiles-mobilehub-1796201548
-            handler: lambda.handler
-            hashcode: MMUM/7V8NTpl2PcAp1HIwbvTk1oCjqeSUH0ZoFuWyfA=
-            memorySize: '1536'
-            modified: '2018-05-21T21:44:54.783+0000'
-            name: imageplumber
-            runtime: nodejs6.10
-            timeout: '10'
-            version: SP0lsC97uSssH7Wj5qVqUbePnmyYeqjI
-      postDir1CRUD: !com.amazonaws.mobilehub.v0.API 
-        attributes:
-          name: postDir1CRUD
-          requires-signin: false
-          sdk-generation-stage-name: Development
-        paths:
-          /postDir1: !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/postDir1-20180521150232.zip
-            description: 'Handler for calls to resource path : /postDir1/{proxy+}'
-            enableCORS: true
-            environment: {}
-            handler: lambda.handler
-            hashcode: DPXGHaBa9cUup/EBrmc7p7yPGVVtaJ+1WmlFbaNq+ak=
-            memorySize: '128'
-            modified: '2018-05-21T07:03:16.771+0000'
-            name: postDir1
-            runtime: nodejs6.10
-            timeout: '3'
-            version: vW8FqF40zJFW69pjP.7Q024q7SuujW.2
-          '/postDir1/{proxy+}': !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/postDir1-20180521150232.zip
-            description: 'Handler for calls to resource path : /postDir1/{proxy+}'
-            enableCORS: true
-            environment: {}
-            handler: lambda.handler
-            hashcode: DPXGHaBa9cUup/EBrmc7p7yPGVVtaJ+1WmlFbaNq+ak=
-            memorySize: '128'
-            modified: '2018-05-21T07:03:16.771+0000'
-            name: postDir1
-            runtime: nodejs6.10
-            timeout: '3'
-            version: od009GEu.pbMv903cYgYidEZnwapxNpB
-      sampleCloudApi: !com.amazonaws.mobilehub.v0.API 
-        attributes:
-          name: sampleCloudApi
-          requires-signin: false
-          sdk-generation-stage-name: Development
-        paths:
-          /items: !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/sampleLambda-20180522055759.zip
-            description: 'Handler for calls to resource path : /items/{proxy+}'
-            enableCORS: true
-            environment: {}
-            handler: lambda.handler
-            hashcode: nnS6fRtF9r8/Sqfxu/dm3S3hImKrh85qXrQ1HTh2wps=
-            memorySize: '128'
-            modified: '2018-05-21T21:58:40.630+0000'
-            name: sampleLambda
-            runtime: nodejs6.10
-            timeout: '3'
-            version: r_TVTuE8U4IOS8oUPe_yXYp3tgvmYiMK
-          '/items/{proxy+}': !com.amazonaws.mobilehub.v0.Function 
-            codeFilename: uploads/sampleLambda-20180522055759.zip
-            description: 'Handler for calls to resource path : /items/{proxy+}'
-            enableCORS: true
-            environment: {}
-            handler: lambda.handler
-            hashcode: nnS6fRtF9r8/Sqfxu/dm3S3hImKrh85qXrQ1HTh2wps=
-            memorySize: '128'
-            modified: '2018-05-21T21:58:40.630+0000'
-            name: sampleLambda
-            runtime: nodejs6.10
-            timeout: '3'
-            version: Vz6vx3D2Il8oqC9lYH6KomoTBjz0cUpZ
   content-delivery: !com.amazonaws.mobilehub.v0.ContentDelivery 
     attributes:
       enabled: true
@@ -113,14 +13,15 @@ features:
           - !com.amazonaws.mobilehub.v0.NoSQLTable 
             attributes:
               description: S
-              postID: S
+              likes: N
+              postid: S
               timestamp: N
-              userID: S
-            hashKeyName: userID
+              username: S
+            hashKeyName: username
             hashKeyType: S
             rangeKeyName: timestamp
             rangeKeyType: N
-            tableName: ___DYNAMIC_PREFIX___-postDir1
+            tableName: ___DYNAMIC_PREFIX___-postdir
             tablePrivacy: public
           - !com.amazonaws.mobilehub.v0.NoSQLTable 
             attributes:
@@ -167,5 +68,5 @@ features:
     attributes:
       enabled: true
       wildcard-cors-policy: true
-name: nusiss-cloud-ca
-region: us-east-1
+name: nuscloudca
+region: ap-southeast-1
