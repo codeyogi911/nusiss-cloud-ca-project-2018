@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Friends
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+    <ion-list *ngFor="let friend of friends;">
+
+      <button ion-item>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-avatar item-start>
+                <img [src]=friend.dp>
+                <!-- <img [src]=defaultavatar (load)="loaded = false" [hidden]="loaded" > -->
+              </ion-avatar>
+              <h2>{{friend.username}}</h2>
+              <!-- <p>test</p> -->
+            </ion-item>
+          </ion-col>
+          <ion-col>
+
+          </ion-col>
+          <ion-col>
+            <!-- <ion-toggle [(ngModel)]="isToggled"></ion-toggle> -->
+          </ion-col>
+        </ion-row>
+
+      </button>
+
+    </ion-list>
+</ion-content>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 import {ModalController} from 'ionic-angular';
 
@@ -9,6 +9,13 @@ const aws_exports = require('../../aws-exports').default;
 import { DynamoDB } from '../../providers/providers';
 const logger = new Logger('Home');
 
+// import { Component, ViewChild } from '';
+import { updateImgs } from 'ionic-angular/components/content/content';
+import { Img } from 'ionic-angular/components/img/img-interface';
+import { Content } from 'ionic-angular';
+
+
+
 import Amplify, { API } from 'aws-amplify';
 Amplify.configure(aws_exports);
 
@@ -16,7 +23,6 @@ Amplify.configure(aws_exports);
   templateUrl: 'home.html'
 })
 export class Home{
-// state = { userID: "", posts: [] };
   public items: any;
   public refresher: any;
   private userID: string;
@@ -39,57 +45,57 @@ export class Home{
       this.posts = [];
   }
 
-  generateId() {
-    var len = 16;
-    var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charLength = chars.length;
-    var result = "";
-    let randoms = window.crypto.getRandomValues(new Uint32Array(len));
-    for(var i = 0; i < len; i++) {
-      result += chars[randoms[i] % charLength];
-    }
-    return result.toLowerCase();
-  }
+
 
   newpost() {
-    var docClient = this.db.getDocumentClient();
-    var table = "postDir1";
     let id = this.generateId();
     let addModal = this.modalCtrl.create(NewPostCreatePage, { 'id': id , 'username': this.username});
     addModal.onDidDismiss(post => {
       if (!post) { return; }
-this.savePost(id, post.description);
+      this.refreshPosts();
+// this.savePost(id, post.description);
 
 });
     addModal.present();
 
 }
-
-async savePost(id, description) {
-  const posts = this.posts;
-  const postID = id;
-  const desc = description;
-  const timestamp = new Date().getTime();
-  this.newPost = {'userID': this.username, postID, desc, timestamp};
-  await API.post('postDir1CRUD', '/postDir1', { body: this.newPost });
-  this.newPost.image = this.getfromS3(this.newPost);
-  this.newPost.postDate = this.formatDate(this.newPost.timestamp);
-  this.newPost.TimeElapsed = this.getTimeElapsed(this.newPost.timestamp);
-  this.newPost.avatarPhoto = this.getAvatar(this.userID);
-  posts.push(this.newPost);
-  this.sortArray(posts);
-  this.posts = posts;
+refreshPosts(){
+this.getPosts();
 }
+// async savePost(id, desc) {
+//   // const posts = this.posts;
+//   // const postid = id;
+//   // const description = desc;
+//   // const timestamp = new Date().getTime();
+//   // this.newPost = {'username': this.username, postid, description, timestamp, 'likes':0};
+//   const params = {
+//         'TableName': 'nuscloudca-mobilehub-726174774-postdir',
+//         'Item': this.newPost,
+//         'ConditionExpression': 'attribute_not_exists(id)'
+//       };
+//   // await API.post('postDir1CRUD', '/postDir1', { body: this.newPost });
+//   this.db.getDocumentClient()
+//   .then(client => (client as DocumentClient).put(params).promise())
+//   .then(data => this.refreshPosts())
+//         .catch(err => console.log(err));
+//
+//   // this.getfromS3(this.newPost);
+//   // this.newPost.postDate = this.formatDate(this.newPost.timestamp);
+//   // this.newPost.TimeElapsed = this.getTimeElapsed(this.newPost.timestamp);
+//   // posts.push(this.newPost);
+//   // this.sortArray(posts);
+//   // this.posts = posts;
+// }
 
 async getPosts() {
   let queryParams = {
-    TableName: 'nusisscloudca-mobilehub-1796201548-postDir1',
-    KeyConditionExpression: "#userID = :userID",
+    TableName: 'nuscloudca-mobilehub-726174774-postdir',
+    KeyConditionExpression: "#username = :username",
     ExpressionAttributeNames:{
-        "#userID": "userID"
+        "#username": "username"
     },
     ExpressionAttributeValues: {
-        ":userID":this.username
+        ":username":this.username
     }
   }
 
@@ -108,39 +114,19 @@ async getPosts() {
   });
     this.posts = data.Items;
     this.sortArray(this.posts);
-
-                }
+              }
   }));
-
-  // let posts = await API.get('postDir1CRUD', `/nusisscloudca-mobilehub-1796201548-postDir1/${this.userID}`);
-  // this.posts =posts;
-  // this.setState({ posts });
-}
-getAvatar(id){
-  Storage.get(id + '/avatar.jpeg', { level: 'public' })
-    // .then(url => this.avatarPhoto = (url as string));
-    .then(url => {
-    console.log('avatarPhoto ' + url as string);
-    var ret = (url as string);
-    // return ret;
-  });
 }
 
 getfromS3(post){
-  Storage.get(this.userID + '/avatar_thumb.webp', { level: 'public' })
-    .then(url => post.avatarPhoto = (url as string));
-    // .then(url => {
-    // console.log('avatarPhoto ' + url as string);
-    // var ret = (url as string);
-    // return ret;
-  // });
-  Storage.get(post.postID+'/image_thumb.webp', { level: 'protected' })
+  Storage.get(this.username + '/avatar_thumb.jpg', { level: 'public' })
+    .then(url => post.avatarPhoto = (url as string))
+    .catch(err => console.log(err));;
+  Storage.get(post.postid+'/image_thumb.jpg', { level: 'protected' })
     .then(result => {console.log(result);
       post.image = result;
-    return result;
   })
     .catch(err => console.log(err));
-// }
 }
 sortArray(inArray){
   inArray.sort(function compare(a,b) {
@@ -164,17 +150,7 @@ getTimeElapsed(date){
 var msecPerMinute = 1000 * 60;
 var msecPerHour = msecPerMinute * 60;
 var msecPerDay = msecPerHour * 24;
-
-// Set a date and get the milliseconds
-// var date = new Date('6/15/1990');
 var dateMsec = new Date().getTime();
-
-// // Set the date to January 1, at midnight, of the specified year.
-// date.setMonth(0);
-// date.setDate(1);
-// date.setHours(0, 0, 0, 0);
-
-// Get the difference in milliseconds.
 var interval = dateMsec - date;
 
 // Calculate how many days the interval contains. Subtract that
@@ -196,9 +172,40 @@ if (days > 0){ return (days + " days ago")}
 else if (hours > 0){ return (hours + "h ago")}
 else if (minutes > 0){return (minutes + "min ago")}
 else if (seconds > 0){return (seconds + "sec ago")}
-// return(days + " days ago" + hours + " hours, " + minutes + " minutes, " + seconds + " seconds.");
-
-//Output: 164 days, 23 hours, 0 minutes, 0 seconds.
-
+else {return "just now"}
 }
+generateId() {
+  var len = 16;
+  var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charLength = chars.length;
+  var result = "";
+  let randoms = window.crypto.getRandomValues(new Uint32Array(len));
+  for(var i = 0; i < len; i++) {
+    result += chars[randoms[i] % charLength];
+  }
+  return result.toLowerCase();
+}
+@ViewChild(Content) _content: Content;
+ngAfterViewInit() : void
+   {
+      if (this._content)
+      {
+         this._content.imgsUpdate = () =>
+         {
+            if (this._content._scroll.initialized && this._content._imgs.length && this._content.isImgsUpdatable())
+            {
+               // Reset cached bounds
+               this._content._imgs.forEach((img: Img) => (<any>img)._rect = null);
+
+               // Use global position to calculate if an img is in the viewable area
+               updateImgs(this._content._imgs, this._content._cTop * -1, this._content.contentHeight, this._content.directionY, 1400, 400);
+            }
+         };
+      }
+   }
+
+
+
+
+
 }

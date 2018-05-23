@@ -10,38 +10,45 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content class="cards-bg social-cards">
-<ion-grid>
-  <ion-row wrap>
-    <ion-col *ngFor="let post of posts;">
+
+
+
+    <ion-content class="cards-bg social-cards">
+      <ion-col *ngFor="let post of posts;">
+    <!-- <ion-list [virtualScroll]="posts" [approxItemHeight]="'550px'"> -->
+    <!-- <ion-grid> -->
+      <!-- <ion-row [virtualScroll]="posts" approxItemWidth="500px" approxItemHeight="500px" wrap> -->
+      <!-- <ion-col> -->
+      <div>
+
 <ion-card>
 
   <ion-item>
     <ion-avatar item-start>
       <img src={{post.avatarPhoto}}>
     </ion-avatar>
-    <h2>{{post.userID}}</h2>
+    <h2>{{post.username}}</h2>
     <p>{{post.postDate}}</p>
   </ion-item>
 
-  <img src={{post.image}}>
+  <img width='381px' height='381px' [src]=post.image>
 
   <ion-card-content>
-    <p>{{post.desc}}</p>
+    <p>{{post.description}}</p>
   </ion-card-content>
 
   <ion-row>
     <ion-col>
       <button ion-button color="primary" clear small icon-start>
         <ion-icon name='thumbs-up'></ion-icon>
-        12 Likes
+        {{post.likes}}
       </button>
     </ion-col>
     <ion-col>
-      <button ion-button color="primary" clear small icon-start>
+      <!-- <button ion-button color="primary" clear small icon-start>
         <ion-icon name='text'></ion-icon>
         4 Comments
-      </button>
+      </button> -->
     </ion-col>
     <ion-col align-self-center text-center>
       <ion-note>
@@ -51,89 +58,14 @@
   </ion-row>
 
 </ion-card>
+</div>
+<!-- </ion-list> -->
 </ion-col>
-</ion-row>
-</ion-grid>
-
-<!-- <ion-card>
-
-  <ion-item>
-    <ion-avatar item-start>
-      <img src="assets/img/sarah-avatar.png.jpeg">
-    </ion-avatar>
-    <h2>Sarah Connor</h2>
-    <p>May 12, 1984</p>
-  </ion-item>
-
-  <img src="assets/img/advance-card-tmntr.jpg">
-
-  <ion-card-content>
-    <p>I face the unknown future, with a sense of hope. Because if a machine, a Terminator, can learn the value of human life, maybe we can too.</p>
-  </ion-card-content>
-
-  <ion-row>
-    <ion-col>
-      <button ion-button color="primary" clear small icon-start>
-        <ion-icon name='thumbs-up'></ion-icon>
-        30 Likes
-      </button>
-    </ion-col>
-    <ion-col>
-      <button ion-button color="primary" clear small icon-start>
-        <ion-icon name='text'></ion-icon>
-        64 Comments
-      </button>
-    </ion-col>
-    <ion-col align-self-center text-center>
-      <ion-note>
-        30yr ago
-      </ion-note>
-    </ion-col>
-  </ion-row>
-
-</ion-card>
-
-
-<ion-card>
-
-  <ion-item>
-    <ion-avatar item-start>
-      <img src="assets/img/ian-avatar.png">
-    </ion-avatar>
-    <h2>Dr. Ian Malcolm</h2>
-    <p>June 28, 1990</p>
-  </ion-item>
-
-  <img src="assets/img/advance-card-jp.jpg">
-
-  <ion-card-content>
-    <p>Your scientists were so preoccupied with whether or not they could, that they didn't stop to think if they should.</p>
-  </ion-card-content>
-
-  <ion-row>
-    <ion-col>
-      <button ion-button color="primary" clear small icon-start>
-        <ion-icon name='thumbs-up'></ion-icon>
-        46 Likes
-      </button>
-    </ion-col>
-    <ion-col>
-      <button ion-button color="primary" clear small icon-start>
-        <ion-icon name='text'></ion-icon>
-        66 Comments
-      </button>
-    </ion-col>
-    <ion-col align-self-center text-center>
-      <ion-note>
-        2d ago
-      </ion-note>
-    </ion-col>
-  </ion-row>
-
-</ion-card> -->
-
-
+<!-- </ion-row> -->
+<!-- </ion-grid> -->
 </ion-content>
+
+
 
 <style>
   .social-cards ion-col {

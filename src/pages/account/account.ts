@@ -30,7 +30,7 @@ export class AccountPage {
 
     Auth.currentUserInfo()
       .then(info => {
-        this.userId = info.id;
+        // this.userId = info.id;
         this.username = info.username;
         this.attributes = [];
         if (info['email']) { this.attributes.push({ name: 'email', value: info['email']}); }
@@ -40,7 +40,7 @@ export class AccountPage {
   }
 
   refreshAvatar() {
-      Storage.get(this.userId + '/avatar.jpeg', { level: 'public' })
+      Storage.get(this.username + '/avatar.jpeg', { level: 'public' })
         .then(url => this.avatarPhoto = (url as string));
     }
 
@@ -86,7 +86,7 @@ export class AccountPage {
 
     const file = files[0];
     const { type } = file;
-    Storage.put(this.userId + '/avatar.jpeg', file, { contentType: type })
+    Storage.put(this.username + '/avatar.jpeg', file, { contentType: type })
       .then(() => this.refreshAvatar())
       .catch(err => logger.error(err));
   }
@@ -98,7 +98,7 @@ export class AccountPage {
       });
       loading.present();
 
-      Storage.put(this.userId + '/avatar.jpeg', this.selectedPhoto, { contentType: 'image/jpeg' })
+      Storage.put(this.username + '/avatar.jpeg', this.selectedPhoto, { contentType: 'image/jpeg' })
         .then(() => {
           this.refreshAvatar()
           loading.dismiss();

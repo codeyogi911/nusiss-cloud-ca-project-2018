@@ -1,99 +1,40 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ViewController, Platform, LoadingController, ToastController } from 'ionic-angular';
-// import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
-// import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Storage } from 'aws-amplify';
 import * as $ from 'jquery';
+import { DynamoDB } from '../../providers/providers';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 @Component({
   selector: 'page-newpost-create',
   templateUrl: 'new-post.html'
 })
 export class NewPostCreatePage {
-  // imageURI:any;
-
   postID:any;
   imageFileName:any;
-
-  // isReadyToSave: boolean;
-
   post: any;
-
-  // isAndroid: boolean;
+  username:string;
 
   selectedFile: File;
-  constructor(public navCtrl: NavController,
+  constructor(
+    // public navCtrl: NavController,
               public navParams: NavParams,
               public viewCtrl: ViewController,
               public platform: Platform,
-              // private transfer: FileTransfer,
-              // private camera: Camera,
               public loadingCtrl: LoadingController,
-              public toastCtrl: ToastController) {
+              public toastCtrl: ToastController,
+            public db: DynamoDB) {
                 this.post = {};
                 this.postID = navParams.get('id');
-    // this.isAndroid = platform.is('android');
-
-
-    // if (!platform.is('cordova')){
-    //   (() => {
-    //     document.getElementById('input').onchange = this.uploadFile();
-    // })();
-    // }
+                this.username = navParams.get('username');
   }
-
-  // function initUpload(){
-  //     const files = document.getElementById('file-input').files;
-  //     const file = files[0];
-  //     if(file == null){
-  //       return alert('No file selected.');
-  //     }
-  //     // getSignedRequest(file);
-  //   }
-
-
   cancel() {
     this.viewCtrl.dismiss();
   }
 
-  done() {
-    this.viewCtrl.dismiss(this.post);
-  }
-
-
   getImage() {
-  //   if (this.platform.is('cordova')) {
-  // const options: CameraOptions = {
-  //   quality: 100,
-  //   destinationType: this.camera.DestinationType.FILE_URI,
-  //   sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
-  // }
-  //
-  // this.camera.getPicture(options).then((imageData) => {
-  //   this.imageURI = imageData;
-  // }, (err) => {
-  //   console.log(err);
-  //   this.presentToast(err);
-  // });
-// }
-// else {
 $('#input').click();
-// }
 }
-
-// presentToast(msg) {
-//   let toast = this.toastCtrl.create({
-//     message: msg,
-//     duration: 3000,
-//     position: 'bottom'
-//   });
-//
-//   toast.onDidDismiss(() => {
-//     console.log('Dismissed toast');
-//   });
-//
-//   toast.present();
-// }
 
 previewfile(event){
   if (event.target.files && event.target.files[0]) {
@@ -122,45 +63,33 @@ async uploadFile() {
   const access = { level: "protected" }; // note the access path
   await Storage.put(name, file, access)
   .then (result => {
-    this.post.isReadyToSave = true;
-    loading.dismiss();
-    this.viewCtrl.dismiss(this.post);
-    console.log(result);
+    let newPost = {'username': this.username,
+    'postid':this.postID,
+    'description':this.post.description,
+    'timestamp': new Date().getTime(),
+    'likes':0};
+    const params = {
+          'TableName': 'nuscloudca-mobilehub-726174774-postdir',
+          'Item': newPost,
+          'ConditionExpression': 'attribute_not_exists(postid)'
+        };
+        this.db.getDocumentClient()
+        .then(client => (client as DocumentClient).put(params).promise())
+        .then(data => {
+          var that = this;
+          setTimeout(function() {
+  loading.dismiss();
+that.viewCtrl.dismiss(that.post);
+}, 2000);
+
+      })
+        .catch(err => console.log(err));
   })
         .catch(err => {
           console.log(err);
-          alert('Something went wrong cannot create post!')
+          alert('Something went wrong cannot create post!');
+          this.viewCtrl.dismiss();
         });
-  // this.isReadyToSave = true;
-
 }
 }
-
-// uploadFile() {
-//   let loader = this.loadingCtrl.create({
-//     content: "Uploading..."
-//   });
-//   loader.present();
-//   const fileTransfer: FileTransferObject = this.transfer.create();
-//
-//   let options: FileUploadOptions = {
-//     fileKey: 'ionicfile',
-//     fileName: 'ionicfile',
-//     chunkedMode: false,
-//     mimeType: "image/jpeg",
-//     headers: {}
-//   }
-//
-//   fileTransfer.upload(this.imageURI, 'http://192.168.0.7:8080/api/uploadImage', options)
-//     .then((data) => {
-//     console.log(data+" Uploaded Successfully");
-//     this.imageFileName = "http://192.168.0.7:8080/static/images/ionicfile.jpg"
-//     loader.dismiss();
-//     this.presentToast("Image uploaded successfully");
-//   }, (err) => {
-//     console.log(err);
-//     loader.dismiss();
-//     this.presentToast(err);
-//   });
-// }
 }
