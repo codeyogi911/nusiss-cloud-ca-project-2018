@@ -44,11 +44,7 @@ getfromS3(friends){
   friends.forEach(function(element){
     Storage.get(element + '/avatar_thumb.jpg', { level: 'public' })
       .then(url => {
-<<<<<<< HEAD
         var item = <any>{};
-=======
-        var item = {};
->>>>>>> a45e9013f293467ca418e4763115161c0e6c7b42
         item.username = element;
         item.dp = (url as string);
         list.push(item);
