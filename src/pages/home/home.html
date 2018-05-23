@@ -14,9 +14,11 @@
 
 
     <ion-content class="cards-bg social-cards">
+
+      <ion-grid>
+      <ion-row wrap>
       <ion-col *ngFor="let post of posts;">
     <!-- <ion-list [virtualScroll]="posts" [approxItemHeight]="'550px'"> -->
-    <!-- <ion-grid> -->
       <!-- <ion-row [virtualScroll]="posts" approxItemWidth="500px" approxItemHeight="500px" wrap> -->
       <!-- <ion-col> -->
       <div>
@@ -31,7 +33,7 @@
     <p>{{post.postDate}}</p>
   </ion-item>
 
-  <img width='381px' height='381px' [src]=post.image>
+  <img [src]=post.image>
 
   <ion-card-content>
     <p>{{post.description}}</p>
@@ -61,8 +63,8 @@
 </div>
 <!-- </ion-list> -->
 </ion-col>
-<!-- </ion-row> -->
-<!-- </ion-grid> -->
+</ion-row>
+</ion-grid>
 </ion-content>
 
 
