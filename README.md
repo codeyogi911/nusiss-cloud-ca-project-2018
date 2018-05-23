@@ -30,3 +30,8 @@ Or open the platform-specific project in the relevant IDE:
 ```bash
 open platforms/ios/MyApp.xcodeproj
 ```
+### Known issues : If jquery not found:
+Run : 
+```bash
+npm install jquery --save
+```
