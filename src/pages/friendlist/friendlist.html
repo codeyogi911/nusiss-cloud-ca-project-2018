@@ -7,8 +7,6 @@
 </ion-header>
 <ion-content>
     <ion-list *ngFor="let friend of friends;">
-
-      <button ion-item>
         <ion-row>
           <ion-col>
             <ion-item>
@@ -16,19 +14,12 @@
                 <img [src]=friend.dp>
                 <!-- <img [src]=defaultavatar (load)="loaded = false" [hidden]="loaded" > -->
               </ion-avatar>
-              <h2>{{friend.username}}</h2>
-              <!-- <p>test</p> -->
+              <ion-label>
+                <h2>{{friend.username}}</h2>
+              </ion-label>
+              <ion-toggle (ionChange)="notify();"></ion-toggle>
             </ion-item>
           </ion-col>
-          <ion-col>
-
-          </ion-col>
-          <ion-col>
-            <!-- <ion-toggle [(ngModel)]="isToggled"></ion-toggle> -->
-          </ion-col>
         </ion-row>
-
-      </button>
-
-    </ion-list>
+      </ion-list>
 </ion-content>

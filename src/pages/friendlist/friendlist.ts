@@ -14,7 +14,7 @@ import { Storage } from 'aws-amplify';
   templateUrl: 'friendlist.html'
 })
 export class friendlistPage {
-
+private isToggled:boolean;
 private friends:any;
 private defaultavatar:string;
   constructor(public db: DynamoDB) {
@@ -22,6 +22,10 @@ private defaultavatar:string;
       .then(url => this.defaultavatar = (url as string))
       .catch(err => console.log(err));
     this.populatelist();
+    this.isToggled = false;
+  }
+  public notify() {
+    console.log("Hello Toggled: "+ this.isToggled);
   }
   populatelist()
 {
