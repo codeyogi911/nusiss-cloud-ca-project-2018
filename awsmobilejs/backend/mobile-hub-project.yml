@@ -6,41 +6,6 @@ features:
       visibility: public-global
     components:
       release: !com.amazonaws.mobilehub.v0.Bucket {}
-  database: !com.amazonaws.mobilehub.v0.Database 
-    components:
-      database-nosql: !com.amazonaws.mobilehub.v0.NoSQLDatabase 
-        tables:
-          - !com.amazonaws.mobilehub.v0.NoSQLTable 
-            attributes:
-              description: S
-              like: L
-              postid: S
-              likecount: N
-            hashKeyName: username
-            hashKeyType: S
-            rangeKeyName: timestamp
-            rangeKeyType: N
-            tableName: ___DYNAMIC_PREFIX___-postdir
-            tablePrivacy: public
-            indexes: []
-          - !com.amazonaws.mobilehub.v0.NoSQLTable 
-            attributes:
-              email: S
-              personName: S
-              phone: S
-            hashKeyName: teamId
-            hashKeyType: S
-            rangeKeyName: personId
-            rangeKeyType: S
-            tableName: ___DYNAMIC_PREFIX___-AWSMobileTable
-            tablePrivacy: public
-            indexes:
-              - !com.amazonaws.mobilehub.v0.NoSQLIndex 
-                hashKeyName: teamId
-                hashKeyType: S
-                rangeKeyName: personName
-                rangeKeyType: S
-                indexName: personName-index
   mobile-analytics: !com.amazonaws.mobilehub.v0.Pinpoint 
     components:
       analytics: !com.amazonaws.mobilehub.v0.PinpointAnalytics {}

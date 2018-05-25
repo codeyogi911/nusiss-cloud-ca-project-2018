@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ViewController, Platform, LoadingController, ToastController } from 'ionic-angular';
+import { NavParams, ViewController, Platform, LoadingController, ToastController } from 'ionic-angular';
 import { Storage } from 'aws-amplify';
 import * as $ from 'jquery';
 import { DynamoDB } from '../../providers/providers';
@@ -10,12 +10,13 @@ import { DocumentClient } from 'aws-sdk/clients/dynamodb';
   templateUrl: 'new-post.html'
 })
 export class NewPostCreatePage {
+
   postID:any;
   imageFileName:any;
   post: any;
   username:string;
-
   selectedFile: File;
+
   constructor(
     // public navCtrl: NavController,
               public navParams: NavParams,
@@ -63,19 +64,26 @@ async uploadFile() {
   const access = { level: "protected" }; // note the access path
   await Storage.put(name, file, access)
   .then (result => {
-    let newPost = {'username': this.username,
-    'postid':this.postID,
-    'description':this.post.description,
-    'timestamp': new Date().getTime(),
-    'likes':0};
+
+    let newPost = {
+      'username': this.username,
+      'postid':this.postID,
+      'description':this.post.description,
+      'timestamp': new Date().getTime(),
+      'likecount':0,
+      'likeusers':[],
+  };
+
     const params = {
-          'TableName': 'nuscloudca-mobilehub-726174774-postdir',
+          'TableName': 'posts',
           'Item': newPost,
-          'ConditionExpression': 'attribute_not_exists(postid)'
+          'ConditionExpression': 'attribute_not_exists(postname)'
         };
+
         this.db.getDocumentClient()
         .then(client => (client as DocumentClient).put(params).promise())
         .then(data => {
+
           var that = this;
           setTimeout(function() {
   loading.dismiss();

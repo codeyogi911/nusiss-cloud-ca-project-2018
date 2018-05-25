@@ -19,5 +19,4 @@ export class DynamoDB {
       .then(credentials => new AWS.DynamoDB.DocumentClient({ credentials: credentials }))
       .catch(err => logger.debug('error getting document client', err));
   }
-
 }
