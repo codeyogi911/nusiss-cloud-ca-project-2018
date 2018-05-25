@@ -13,36 +13,34 @@ features:
           - !com.amazonaws.mobilehub.v0.NoSQLTable 
             attributes:
               description: S
-              likes: N
+              like: L
               postid: S
-              timestamp: N
-              username: S
+              likecount: N
             hashKeyName: username
             hashKeyType: S
             rangeKeyName: timestamp
             rangeKeyType: N
             tableName: ___DYNAMIC_PREFIX___-postdir
             tablePrivacy: public
+            indexes: []
           - !com.amazonaws.mobilehub.v0.NoSQLTable 
             attributes:
               email: S
-              personId: S
               personName: S
               phone: S
-              teamId: S
             hashKeyName: teamId
             hashKeyType: S
-            indexes:
-              - !com.amazonaws.mobilehub.v0.NoSQLIndex 
-                hashKeyName: teamId
-                hashKeyType: S
-                indexName: personName-index
-                rangeKeyName: personName
-                rangeKeyType: S
             rangeKeyName: personId
             rangeKeyType: S
             tableName: ___DYNAMIC_PREFIX___-AWSMobileTable
             tablePrivacy: public
+            indexes:
+              - !com.amazonaws.mobilehub.v0.NoSQLIndex 
+                hashKeyName: teamId
+                hashKeyType: S
+                rangeKeyName: personName
+                rangeKeyType: S
+                indexName: personName-index
   mobile-analytics: !com.amazonaws.mobilehub.v0.Pinpoint 
     components:
       analytics: !com.amazonaws.mobilehub.v0.PinpointAnalytics {}

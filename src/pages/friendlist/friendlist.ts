@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 // import {AWS} from 'aws-sdk';
-// import { Auth } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import { DynamoDB } from '../../providers/providers';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { Storage } from 'aws-amplify';
@@ -17,14 +17,20 @@ export class friendlistPage {
 private isToggled:boolean;
 private friends:any;
 private defaultavatar:string;
+private username:string;
   constructor(public db: DynamoDB) {
     Storage.get('defaultdp' + '/generic-user-purple.png', { level: 'public' })
       .then(url => this.defaultavatar = (url as string))
       .catch(err => console.log(err));
+      Auth.currentAuthenticatedUser()
+      .then(AuthenticatedUser => {
+        console.log(AuthenticatedUser);
+        this.username = AuthenticatedUser.username;});
     this.populatelist();
     this.isToggled = false;
   }
   public notify() {
+    // isToggled = !isToggled;
     console.log("Hello Toggled: "+ this.isToggled);
   }
   populatelist()
@@ -38,6 +44,7 @@ private defaultavatar:string;
     var grouped = that.groupBy(list, list => list.username);
     // console.log(grouped);
     this.friends = Array.from( grouped.keys() );
+    this.friends.splice(this.friends.indexOf(this.username),1);
     this.getfromS3(this.friends);
   }).
   catch(err => console.log(err));
@@ -58,11 +65,6 @@ getfromS3(friends){
       );
   });
   this.friends = list;
-  // Storage.get(post.postid+'/image_thumb.jpg', { level: 'protected' })
-  //   .then(result => {console.log(result);
-  //     post.image = result;
-  // })
-  //   .catch(err => console.log(err));
 }
  groupBy(list, keyGetter) {
     const map = new Map();
