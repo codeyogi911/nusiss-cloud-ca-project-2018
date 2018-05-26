@@ -19,10 +19,12 @@ var util = require('util');
 exports.handler = function(event, context, callback) {
     // Read options from the event.
     console.log("Reading options from event:\n", util.inspect(event, {depth: 5}));
-    var srcBucket = event.Records[0].s3.bucket.name;
+    // var srcBucket = event.Records[0].s3.bucket.name;
+    var srcBucket = 'nuscloudca-userfiles-mobilehub-726174774';
     // Object key may have spaces or unicode non-ASCII characters.
-    var srcKey    =
-    decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, " "));
+    // var srcKey    =
+    // decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, " "));
+    var srcKey    = event.srcKey;
     var dstBucket = srcBucket;
 
     var typeMatch = srcKey.match(/\.([^.]*)$/);
@@ -36,10 +38,10 @@ exports.handler = function(event, context, callback) {
         return;
     }
     // Sanity check: validate that source and destination are different buckets.
-    if (srcKey.includes("_thumb")) {
-        callback("Job already done!");
-        return;
-    }
+    // if (srcKey.includes("_thumb")) {
+    //     callback("Job already done!");
+    //     return;
+    // }
     if (srcKey.includes("avatar")){
       var dstKey  = srcKey.replace("avatar.jpeg", "avatar_thumb.jpg");
       var dim = 200;
@@ -84,7 +86,7 @@ exports.handler = function(event, context, callback) {
                     'Successfully resized ' + srcBucket + '/' + srcKey +
                     ' and uploaded to ' + dstBucket + '/' + dstKey
                 );
-                callback(null, "message");
+                callback(null, "Resize Successfully");
               })
               .catch(err => {
                     console.error(
@@ -92,5 +94,6 @@ exports.handler = function(event, context, callback) {
                         ' and upload to ' + dstBucket + '/' + dstKey +
                         ' due to an error: ' + err
                     );
+                    callback(err);
               });
 }

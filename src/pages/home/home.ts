@@ -15,7 +15,7 @@ import AWS from 'aws-sdk';
 })
 export class Home{
 
-  // private userID: string;
+  private userID: string;
   private posts: any;
   private username: string;
   private lambda:any;
@@ -27,7 +27,7 @@ export class Home{
       Auth.currentCredentials()
         .then(credentials => {
           this.lambda = new AWS.Lambda({credentials: credentials, apiVersion: '2015-03-31'});
-          // this.userID = credentials.identityId;
+          this.userID = credentials.identityId;
           this.getPosts();
         })
         .catch(err => logger.debug('get current credentials err', err));
@@ -38,7 +38,7 @@ export class Home{
 
   newpost() {
     let id = this.generateId();
-    let addModal = this.modalCtrl.create(NewPostCreatePage, { 'id': id , 'username': this.username});
+    let addModal = this.modalCtrl.create(NewPostCreatePage, {'userID':this.userID,'id':id,'username': this.username,'lambda':this.lambda});
     addModal.onDidDismiss(post => {
       if (!post) { return; }
       this.refreshPosts();

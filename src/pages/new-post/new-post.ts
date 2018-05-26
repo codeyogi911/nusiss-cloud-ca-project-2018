@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { NavParams, ViewController, Platform, LoadingController, ToastController } from 'ionic-angular';
 import { Storage } from 'aws-amplify';
 import * as $ from 'jquery';
-import { DynamoDB } from '../../providers/providers';
-import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+// import { DynamoDB } from '../../providers/providers';
+// import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+// import AWS from 'aws-sdk';
+
 
 @Component({
   selector: 'page-newpost-create',
@@ -16,18 +18,20 @@ export class NewPostCreatePage {
   post: any;
   username:string;
   selectedFile: File;
-
+  private lambda:any;
+  private userID:string;
   constructor(
     // public navCtrl: NavController,
               public navParams: NavParams,
               public viewCtrl: ViewController,
               public platform: Platform,
               public loadingCtrl: LoadingController,
-              public toastCtrl: ToastController,
-            public db: DynamoDB) {
+              public toastCtrl: ToastController) {
                 this.post = {};
                 this.postID = navParams.get('id');
                 this.username = navParams.get('username');
+                this.lambda = navParams.get('lambda');
+                this.userID = navParams.get('userID')
   }
   cancel() {
     this.viewCtrl.dismiss();
@@ -65,33 +69,26 @@ async uploadFile() {
   await Storage.put(name, file, access)
   .then (result => {
 
-    let newPost = {
-      'username': this.username,
-      'postid':this.postID,
-      'description':this.post.description,
-      'timestamp': new Date().getTime(),
-      'likecount':0,
-      'likeusers':[],
-  };
 
-    const params = {
-          'TableName': 'posts',
-          'Item': newPost,
-          'ConditionExpression': 'attribute_not_exists(postname)'
-        };
-
-        this.db.getDocumentClient()
-        .then(client => (client as DocumentClient).put(params).promise())
-        .then(data => {
-
-          var that = this;
-          setTimeout(function() {
-  loading.dismiss();
-that.viewCtrl.dismiss(that.post);
-}, 2000);
-
-      })
-        .catch(err => console.log(err));
+    var Payload = JSON.stringify({"username":this.username,"description":this.post.description,
+    "postid":this.postID,"userID":this.userID});
+    var params = {
+      FunctionName: 'createNewPost', /* required */
+      InvocationType: "RequestResponse",
+      LogType: "None",
+      Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
+    };
+    var that = this;
+    this.lambda.invoke(params, function(err, data) {
+      if (err) {
+        console.log(err, err.stack);
+      } // an error occurred
+      else    {                           // successful response
+      console.log(data);
+    loading.dismiss();
+    that.viewCtrl.dismiss(that.post);
+    }
+    });
   })
         .catch(err => {
           console.log(err);
