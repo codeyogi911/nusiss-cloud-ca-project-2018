@@ -4,10 +4,8 @@ import {ModalController, LoadingController} from 'ionic-angular';
 
 import {NewPostCreatePage} from '../new-post/new-post';
 import { Auth, Logger, Storage } from 'aws-amplify';
-// const aws_exports = require('../../aws-exports').default;
 const logger = new Logger('Home');
-// import { Content } from 'ionic-angular';
-
+import { GlobalVars } from '../../providers/GlobalVars';
 import AWS from 'aws-sdk';
 
 @Component({
@@ -19,19 +17,23 @@ export class Home{
   private posts: any;
   private username: string;
   private lambda:any;
-  constructor(public modalCtrl: ModalController, public loadingCtrl: LoadingController) {
+  constructor(public modalCtrl: ModalController, public loadingCtrl: LoadingController, public globals: GlobalVars) {
     Auth.currentAuthenticatedUser()
     .then(AuthenticatedUser => {
-      console.log(AuthenticatedUser);
       this.username = AuthenticatedUser.username;
+      this.globals.setUserName(AuthenticatedUser.username);
+
       Auth.currentCredentials()
-        .then(credentials => {
-          this.lambda = new AWS.Lambda({credentials: credentials, apiVersion: '2015-03-31'});
-          this.userID = credentials.identityId;
-          this.getPosts();
-        })
-        .catch(err => logger.debug('get current credentials err', err));
-    });
+       .then(credentials => {
+         this.userID = credentials.identityId;
+         this.lambda = new AWS.Lambda({credentials: credentials, apiVersion: '2015-03-31'});
+         this.globals.setLambda(this.lambda);
+         this.refreshPosts();
+     }
+       )
+       .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
   }
 
 
@@ -52,7 +54,7 @@ this.getPosts();
 
 getPosts() {
   let loading = this.loadingCtrl.create({
-    content: 'Downloading love...'
+    content: 'Cooking your posts...'
   });
   loading.present();
   var Payload = JSON.stringify({"username":this.username});

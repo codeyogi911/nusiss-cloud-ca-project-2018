@@ -6,15 +6,15 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-    <ion-list *ngFor="let friend of friends;">
+    <ion-list *ngFor="let user of users;">
         <ion-row>
           <ion-col>
             <ion-item>
               <ion-avatar item-start>
-                <img [src]=friend.dp>
+                <img [src]=user.dp>
               </ion-avatar>
               <ion-label>
-                <h2>{{friend.username}}</h2>
+                <h2>{{user.username}}</h2>
               </ion-label>
               <ion-toggle (ionChange)="notify();"></ion-toggle>
             </ion-item>

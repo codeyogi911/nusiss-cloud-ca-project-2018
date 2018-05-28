@@ -26,6 +26,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { DynamoDB } from '../providers/aws.dynamodb';
+import {GlobalVars} from '../providers/GlobalVars';
 // import * as $ from 'jquery';
 import Amplify from 'aws-amplify';
 const aws_exports = require('../aws-exports').default;
@@ -69,6 +70,7 @@ Amplify.configure(aws_exports);
     Home
   ],
   providers: [
+    GlobalVars,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
