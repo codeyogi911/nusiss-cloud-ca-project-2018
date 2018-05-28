@@ -16,7 +16,7 @@
               <ion-label>
                 <h2>{{user.username}}</h2>
               </ion-label>
-              <ion-toggle (ionChange)="notify();"></ion-toggle>
+              <ion-toggle (ionChange)="notify($event,user.username);"></ion-toggle>
             </ion-item>
           </ion-col>
         </ion-row>

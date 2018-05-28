@@ -17,6 +17,7 @@ export class Home{
   private posts: any;
   private username: string;
   private lambda:any;
+  private users:any;
   constructor(public modalCtrl: ModalController, public loadingCtrl: LoadingController, public globals: GlobalVars) {
     Auth.currentAuthenticatedUser()
     .then(AuthenticatedUser => {
@@ -70,20 +71,38 @@ getPosts() {
     else    {                           // successful response
     // console.log(data);
     that.posts = JSON.parse(data.Payload);
-
-    that.posts.forEach(function(element){
-    that.getfromS3(element);
-    element.postDate = that.formatDate(element.timestamp);
-    element.TimeElapsed = that.getTimeElapsed(element.timestamp);
-  });
-  that.sortArray(that.posts);
-  loading.dismiss();
+    var Payload = JSON.stringify({});
+    var params = {
+      FunctionName: 'getUsers', /* required */
+      InvocationType: "RequestResponse",
+      LogType: "None",
+      Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
+    };
+    // var that = this;
+    that.lambda.invoke(params, function(err, data) {
+      if (err) console.log(err, err.stack); // an error occurred
+      else    {                           // successful response
+      // console.log(data);
+      that.users = JSON.parse(data.Payload);
+      that.globals.setUsers(that.users);
+      that.posts.forEach(function(element){
+      that.getfromS3(element);
+      element.postDate = that.formatDate(element.timestamp);
+      element.TimeElapsed = that.getTimeElapsed(element.timestamp);
+    });
+    that.sortArray(that.posts);
+    loading.dismiss();
+    }
+    });
   }
   });
 }
 
 getfromS3(post){
-  Storage.get(post.username + '/avatar_thumb.jpg', { level: 'public' })
+  var user = this.users.find(function(user){
+    return user.username == post.username;
+  });
+  Storage.get(user.avatarPath, { level: 'public' })
     .then(url => post.avatarPhoto = (url as string))
     .catch(err => console.log(err));;
   Storage.get(post.postid+'/image_thumb.jpg', { level: 'protected' })

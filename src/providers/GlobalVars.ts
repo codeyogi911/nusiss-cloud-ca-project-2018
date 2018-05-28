@@ -7,9 +7,8 @@ import AWS from 'aws-sdk';
 export class GlobalVars {
   public username:string;
   public lambda:any;
-
+  public users:any;
   constructor() {
-    // this.myGlobalVar = "";
   }
 
 getUserName(){
@@ -26,13 +25,11 @@ setUserName(username){
   setLambda(lambda){
     this.lambda = lambda;
   }
-
-  setMyGlobalVar(value) {
-    this.myGlobalVar = value;
+  setUsers(users){
+    this.users = users;
   }
 
-  getMyGlobalVar() {
-    return this.myGlobalVar;
+  getUsers(){
+    return this.users;
   }
-
 }
