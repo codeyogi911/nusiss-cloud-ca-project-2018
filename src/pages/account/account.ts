@@ -6,7 +6,7 @@ import { Auth, Storage, Logger } from 'aws-amplify';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 
 const logger = new Logger('Account');
-
+import { GlobalVars } from '../../providers/GlobalVars';
 @Component({
   selector: 'page-account',
   templateUrl: 'account.html'
@@ -23,7 +23,7 @@ export class AccountPage {
 
   constructor(public navCtrl: NavController,
               public camera: Camera,
-              public loadingCtrl: LoadingController) {
+              public loadingCtrl: LoadingController, public globals: GlobalVars) {
     this.attributes = [];
     this.avatarPhoto = null;
     this.selectedPhoto = null;
@@ -37,12 +37,30 @@ export class AccountPage {
         if (info['phone_number']) { this.attributes.push({ name: 'phone_number', value: info['phone_number']}); }
         this.refreshAvatar();
       });
+      this.lambda = this.globals.getLambda();
   }
 
   refreshAvatar() {
-      Storage.get(this.username + '/avatar.jpeg', { level: 'public' })
-        .then(url => this.avatarPhoto = (url as string));
-    }
+
+//     var Payload = JSON.stringify({"username":this.username});
+//     var params = {
+//       FunctionName: 'updateAvatar', /* required */
+//       InvocationType: "RequestResponse",
+//       LogType: "None",
+//       Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
+//     };
+// this.lambda.invoke(params, function(err, data) {
+//   if (err) console.log(err, err.stack);
+//   else {
+//     console.log(data);
+    Storage.get(this.username + '/avatar_thumb.jpg', { level: 'public' })
+      .then(url => this.avatarPhoto = (url as string));
+//   }
+//
+//
+//
+// });
+}
 
   // refreshAvatar() {
   //   Storage.get(this.userId + '/avatar')
@@ -86,8 +104,25 @@ export class AccountPage {
 
     const file = files[0];
     const { type } = file;
+    var that = this;
     Storage.put(this.username + '/avatar.jpeg', file, { contentType: type })
-      .then(() => this.refreshAvatar())
+      .then(() => {
+        var Payload = JSON.stringify({"username":this.username});
+        var params = {
+          FunctionName: 'updateAvatar', /* required */
+          InvocationType: "RequestResponse",
+          LogType: "None",
+          Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
+        };
+    this.lambda.invoke(params, function(err, data) {
+      if (err) console.log(err, err.stack);
+      else {
+        console.log(data);
+        that.refreshAvatar();
+      }
+    });
+
+      })
       .catch(err => logger.error(err));
   }
 
@@ -100,8 +135,22 @@ export class AccountPage {
 
       Storage.put(this.username + '/avatar.jpeg', this.selectedPhoto, { contentType: 'image/jpeg' })
         .then(() => {
-          this.refreshAvatar()
-          loading.dismiss();
+          var Payload = JSON.stringify({"username":this.username});
+          var params = {
+            FunctionName: 'updateAvatar', /* required */
+            InvocationType: "RequestResponse",
+            LogType: "None",
+            Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
+          };
+      this.lambda.invoke(params, function(err, data) {
+        if (err) console.log(err, err.stack);
+        else {
+          console.log(data);
+            this.refreshAvatar()
+            loading.dismiss();
+        }
+      });
+
         })
         .catch(err => {
           logger.error(err)
