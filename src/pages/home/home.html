@@ -21,7 +21,7 @@
     <!-- <ion-list [virtualScroll]="posts" [approxItemHeight]="'550px'"> -->
       <!-- <ion-row [virtualScroll]="posts" approxItemWidth="500px" approxItemHeight="500px" wrap> -->
       <!-- <ion-col> -->
-      <div>
+      <!-- <div> -->
 
 <ion-card>
 
@@ -37,30 +37,22 @@
 
   <ion-card-content>
     <p>{{post.description}}</p>
+    <ion-note>
+      {{post.TimeElapsed}}
+    </ion-note>
   </ion-card-content>
 
   <ion-row>
-    <ion-col>
-      <button ion-button color="primary" clear small icon-start>
-        <ion-icon name='thumbs-up'></ion-icon>
+    <!-- <ion-col> -->
+      <button (click)="likePost(post)" ion-button color="primary" clear medium icon-start>
+        <ion-icon [color]="post.isLiked ? 'danger' : 'dark'" [name]="post.isLiked ? 'heart' : 'heart-outline'"></ion-icon>
         {{post.likes}}
       </button>
-    </ion-col>
-    <ion-col>
-      <!-- <button ion-button color="primary" clear small icon-start>
-        <ion-icon name='text'></ion-icon>
-        4 Comments
-      </button> -->
-    </ion-col>
-    <ion-col align-self-center text-center>
-      <ion-note>
-        {{post.TimeElapsed}}
-      </ion-note>
-    </ion-col>
+    <!-- </ion-col> -->
   </ion-row>
 
 </ion-card>
-</div>
+<!-- </div> -->
 <!-- </ion-list> -->
 </ion-col>
 </ion-row>

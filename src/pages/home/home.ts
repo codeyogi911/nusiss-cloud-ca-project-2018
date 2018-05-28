@@ -39,7 +39,31 @@ export class Home{
     .catch(err => console.log(err));
   }
 
-
+likePost(post){
+  var inis = post.isLiked;
+  post.isLiked = !post.isLiked;
+  var Payload = JSON.stringify({"username":this.username,"postid":post.postid,"timestamp":post.timestamp,"isLiked":!inis});
+  var params = {
+    FunctionName: 'likeUpdateFunc', /* required */
+    InvocationType: "RequestResponse",
+    LogType: "None",
+    Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
+  };
+  var that = this;
+  this.lambda.invoke(params, function(err, data) {
+    if (err) {
+      console.log(err, err.stack);
+      post.isLiked = inis;
+    } // an error occurred
+    else    {
+    console.log(data);
+    if (data.Payload == '200')
+    post.isLiked = !inis;
+    else
+    post.isLiked = inis;
+    }                        // successful response
+});
+}
 
   newpost() {
     let id = this.generateId();
@@ -101,6 +125,7 @@ getPosts() {
 }
 
 getfromS3(post){
+  post.isLiked = post.likeusers.includes(this.username);
   var user = this.users.find(function(user){
     return user.username == post.username;
   });
@@ -166,10 +191,10 @@ interval = interval - (minutes * msecPerMinute );
 var seconds = Math.floor(interval / 1000 );
 
 // Display the result.
-if (days > 0){ return (days + " days ago")}
-else if (hours > 0){ return (hours + "h ago")}
-else if (minutes > 0){return (minutes + "min ago")}
-else if (seconds > 0){return (seconds + "sec ago")}
+if (days > 0){ return (days + " DAYS AGO")}
+else if (hours > 0){ return (hours + " HOURS AGO")}
+else if (minutes > 0){return (minutes + " MINUTES AGO")}
+else if (seconds > 0){return (seconds + " SECONDS AGO")}
 else {return "just now"}
 }
 
