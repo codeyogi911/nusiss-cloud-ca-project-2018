@@ -46,7 +46,7 @@
     <!-- <ion-col> -->
       <button (click)="likePost(post)" ion-button color="primary" clear medium icon-start>
         <ion-icon [color]="post.isLiked ? 'danger' : 'dark'" [name]="post.isLiked ? 'heart' : 'heart-outline'"></ion-icon>
-        {{post.likes}}
+        {{post.likecount}}
       </button>
     <!-- </ion-col> -->
   </ion-row>

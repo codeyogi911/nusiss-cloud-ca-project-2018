@@ -41,7 +41,12 @@ export class Home{
 
 likePost(post){
   var inis = post.isLiked;
+  var inic = post.likecount;
   post.isLiked = !post.isLiked;
+  if (!inis)
+  post.likecount++;
+  else
+  post.likecount--;
   var Payload = JSON.stringify({"username":this.username,"postid":post.postid,"timestamp":post.timestamp,"isLiked":!inis});
   var params = {
     FunctionName: 'likeUpdateFunc', /* required */
@@ -54,13 +59,17 @@ likePost(post){
     if (err) {
       console.log(err, err.stack);
       post.isLiked = inis;
+      post.likecount = inic;
     } // an error occurred
     else    {
     console.log(data);
     if (data.Payload == '200')
     post.isLiked = !inis;
-    else
-    post.isLiked = inis;
+    else{
+      post.isLiked = inis;
+      post.likecount = inic;
+    }
+
     }                        // successful response
 });
 }
