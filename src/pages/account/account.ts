@@ -42,7 +42,13 @@ export class AccountPage {
   }
 
   refreshAvatar() {
-
+    // var user = this.users.find(function(user){
+    //   return user.username == post.username;
+    // });
+    var user = this.globals.getUser();
+    Storage.get(user.avatarPath, { level: 'public' })
+      .then(url => this.avatarPhoto = (url as string))
+      .catch(err => console.log(err));
 //     var Payload = JSON.stringify({"username":this.username});
 //     var params = {
 //       FunctionName: 'updateAvatar', /* required */
@@ -54,8 +60,8 @@ export class AccountPage {
 //   if (err) console.log(err, err.stack);
 //   else {
 //     console.log(data);
-    Storage.get(this.username + '/avatar_thumb.jpg', { level: 'public' })
-      .then(url => this.avatarPhoto = (url as string));
+    // Storage.get(this.username + '/avatar_thumb.jpg', { level: 'public' })
+    //   .then(url => this.avatarPhoto = (url as string));
 //   }
 //
 //

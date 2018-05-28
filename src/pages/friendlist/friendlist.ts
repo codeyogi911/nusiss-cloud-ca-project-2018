@@ -7,7 +7,7 @@ import { GlobalVars } from '../../providers/GlobalVars';
   templateUrl: 'friendlist.html'
 })
 export class friendlistPage {
-  private isToggled:boolean;
+  // private isToggled:boolean;
   private users:any;
   private username:string;
   private lambda:any;
@@ -45,7 +45,7 @@ export class friendlistPage {
     };
 
     // console.log(this.isToggled)
-    var that = this;
+    // var that = this;
     this.lambda.invoke(params, function(err, data) {
       if (err)
         {

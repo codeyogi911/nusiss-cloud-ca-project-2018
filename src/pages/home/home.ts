@@ -3,10 +3,10 @@ import { Component } from '@angular/core';
 import {ModalController, LoadingController} from 'ionic-angular';
 
 import {NewPostCreatePage} from '../new-post/new-post';
-import Amplify, { Auth, Logger, Storage } from 'aws-amplify';
+import { Auth, Storage } from 'aws-amplify';
 // import aws_exports from '';
 // Amplify.configure(aws_exports);
-const logger = new Logger('Home');
+// const logger = new Logger('Home');
 import { GlobalVars } from '../../providers/GlobalVars';
 import AWS from 'aws-sdk';
 
@@ -49,7 +49,7 @@ likePost(post){
     LogType: "None",
     Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
   };
-  var that = this;
+  // var that = this;
   this.lambda.invoke(params, function(err, data) {
     if (err) {
       console.log(err, err.stack);
@@ -129,6 +129,7 @@ getfromS3(post){
   var user = this.users.find(function(user){
     return user.username == post.username;
   });
+  this.globals.setUser(user);
   Storage.get(user.avatarPath, { level: 'public' })
     .then(url => post.avatarPhoto = (url as string))
     .catch(err => console.log(err));
