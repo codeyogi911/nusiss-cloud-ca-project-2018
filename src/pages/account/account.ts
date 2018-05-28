@@ -20,6 +20,7 @@ export class AccountPage {
   public userId: string;
   public username: string;
   public attributes: any;
+  public lambda: any;
 
   constructor(public navCtrl: NavController,
               public camera: Camera,
