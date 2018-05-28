@@ -62,8 +62,17 @@ export class friendlistPage {
     //   content: 'Retrieving...'
     // });
     // loading.present();
+    // this.users = this.globals.getUsers();
     this.users = this.globals.getUsers();
-    this.getfromS3(this.users);
+    var that = this;
+    var following = this.users.find(function(user){
+      return user.username == that.username;
+    }).following;
+
+    var removeIndex = this.users.map(function(item) { return item.username; }).indexOf(that.username);
+    this.users.splice(removeIndex, 1);
+
+    this.getfromS3(this.users,following);
   //   var Payload = JSON.stringify({});
   //   var params = {
   //     FunctionName: 'getUsers', /* required */
@@ -82,7 +91,7 @@ export class friendlistPage {
   //   }
   // });
 }
-getfromS3(users){
+getfromS3(users,following){
   let list = [];
   users.forEach(function(element){
     Storage.get(element.avatarPath, { level: 'public' })
@@ -90,6 +99,11 @@ getfromS3(users){
       var item = <any>{};
       item.username = element.username;
       item.dp = (url as string);
+      if (following.indexOf(element.username) > -1) {
+        item.isToggled = true;
+      } else {
+        item.isToggled = false;
+      }
       list.push(item);
     })
     .catch(err =>

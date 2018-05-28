@@ -3,7 +3,9 @@ import { Component } from '@angular/core';
 import {ModalController, LoadingController} from 'ionic-angular';
 
 import {NewPostCreatePage} from '../new-post/new-post';
-import { Auth, Logger, Storage } from 'aws-amplify';
+import Amplify, { Auth, Logger, Storage } from 'aws-amplify';
+// import aws_exports from '';
+// Amplify.configure(aws_exports);
 const logger = new Logger('Home');
 import { GlobalVars } from '../../providers/GlobalVars';
 import AWS from 'aws-sdk';
@@ -104,8 +106,17 @@ getfromS3(post){
   });
   Storage.get(user.avatarPath, { level: 'public' })
     .then(url => post.avatarPhoto = (url as string))
-    .catch(err => console.log(err));;
-  Storage.get(post.postid+'/image_thumb.jpg', { level: 'protected' })
+    .catch(err => console.log(err));
+
+    // if (post.userID == this.userID)
+    // var level = {level:'protected'};
+    // else
+    // var level = {
+    //   level:  'protected',
+    //   identityId: post.userID
+    // };
+
+  Storage.get(post.username + '/' + post.postid+'/image_thumb.jpg', {level:'public'})
     .then(result => {
       // console.log(result);
       post.image = result;

@@ -64,8 +64,8 @@ async uploadFile() {
   }
   else
   {
-    let name = this.postID+'/image.jpeg';
-  const access = { level: "protected" }; // note the access path
+    let name = this.username + '/' + this.postID + '/image.jpeg';
+  const access = { level: "public" }; // note the access path
   await Storage.put(name, file, access)
   .then (result => {
 
