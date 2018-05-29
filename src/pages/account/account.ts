@@ -125,6 +125,9 @@ export class AccountPage {
       if (err) console.log(err, err.stack);
       else {
         console.log(data);
+        var user = this.globals.getUser();
+        user.avatarPath = this.username + '/avatar.jpeg';
+        this.globals.setUser(user);
         that.refreshAvatar();
       }
     });
@@ -153,6 +156,9 @@ export class AccountPage {
         if (err) console.log(err, err.stack);
         else {
           console.log(data);
+            var user = this.globals.getUser();
+            user.avatarPath = this.username + '/avatar.jpeg';
+            this.globals.setUser(user);
             this.refreshAvatar()
             loading.dismiss();
         }

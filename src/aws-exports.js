@@ -14,6 +14,7 @@ const awsmobile = {
     'aws_content_delivery_bucket_region': 'ap-southeast-1',
     'aws_content_delivery_cloudfront': 'enable',
     'aws_content_delivery_cloudfront_domain': 'dbikd0czq0mea.cloudfront.net',
+    'aws_mandatory_sign_in': 'enable',
     'aws_mobile_analytics_app_id': '0c75209b47e646b0b478aa0dc0d7bf1f',
     'aws_mobile_analytics_app_region': 'us-east-1',
     'aws_project_id': 'ed45c688-ce24-4841-bfde-894a5d7645f4',

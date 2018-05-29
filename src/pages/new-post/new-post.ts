@@ -69,7 +69,7 @@ async uploadFile() {
   await Storage.put(name, file, access)
   .then (result => {
 
-
+    loading.setContent('Thinking...');
     var Payload = JSON.stringify({"username":this.username,"description":this.post.description,
     "postid":this.postID,"userID":this.userID});
     var params = {
