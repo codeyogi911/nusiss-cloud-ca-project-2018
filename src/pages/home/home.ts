@@ -1,12 +1,7 @@
 import { Component } from '@angular/core';
-
 import {ModalController, LoadingController} from 'ionic-angular';
-
 import {NewPostCreatePage} from '../new-post/new-post';
 import { Auth, Storage } from 'aws-amplify';
-// import aws_exports from '';
-// Amplify.configure(aws_exports);
-// const logger = new Logger('Home');
 import { GlobalVars } from '../../providers/GlobalVars';
 import AWS from 'aws-sdk';
 
@@ -20,7 +15,10 @@ export class Home{
   private username: string;
   private lambda:any;
   private users:any;
-  constructor(public modalCtrl: ModalController, public loadingCtrl: LoadingController, public globals: GlobalVars) {
+
+  constructor(public modalCtrl: ModalController,
+              public loadingCtrl: LoadingController,
+              public globals: GlobalVars) {
     Auth.currentAuthenticatedUser()
     .then(AuthenticatedUser => {
       this.username = AuthenticatedUser.username;
@@ -143,14 +141,6 @@ getfromS3(post){
     .then(url => post.avatarPhoto = (url as string))
     .catch(err => console.log(err));
 
-    // if (post.userID == this.userID)
-    // var level = {level:'protected'};
-    // else
-    // var level = {
-    //   level:  'protected',
-    //   identityId: post.userID
-    // };
-
   Storage.get(post.username + '/' + post.postid+'/image_thumb.jpg', {level:'public'})
     .then(result => {
       // console.log(result);
@@ -205,7 +195,7 @@ if (days > 0){ return (days + " DAYS AGO")}
 else if (hours > 0){ return (hours + " HOURS AGO")}
 else if (minutes > 0){return (minutes + " MINUTES AGO")}
 else if (seconds > 0){return (seconds + " SECONDS AGO")}
-else {return "just now"}
+else {return "JUST NOW"}
 }
 
 generateId() {
