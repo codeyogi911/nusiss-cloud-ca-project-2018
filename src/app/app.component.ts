@@ -4,16 +4,11 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Auth } from 'aws-amplify';
 
-import { TabsPage } from '../pages/tabs/tabs';
-import { LoginPage } from '../pages/login/login';
-// declare var jquery:any;
-// declare var $ :any;
-// declare var window;
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = null;
+  rootPage:string = null;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     let globalActions = function() {
@@ -26,8 +21,8 @@ export class MyApp {
     platform.ready()
       .then(() => {
         Auth.currentAuthenticatedUser()
-          .then(() => { this.rootPage = TabsPage; })
-          .catch(() => { this.rootPage = LoginPage; })
+          .then(() => { this.rootPage = 'NewTabsPage'; })
+          .catch(() => { this.rootPage = 'NewLoginPage'; })
           .then(() => globalActions());
       });
   }

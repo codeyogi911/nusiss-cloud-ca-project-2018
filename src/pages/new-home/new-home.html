@@ -1,0 +1,68 @@
+
+<ion-header>
+  <ion-navbar>
+    <ion-title>Home</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="newpost()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+
+
+    <ion-content class="cards-bg social-cards">
+
+      <ion-grid>
+      <ion-row wrap>
+      <ion-col *ngFor="let item of items;">
+<ion-card>
+
+  <ion-item>
+    <ion-avatar item-start>
+      <img src={{item.avatarPhoto}}>
+    </ion-avatar>
+    <h2>{{item.username}}</h2>
+    <p>{{item.postDate}}</p>
+  </ion-item>
+
+  <img [src]=item.image>
+
+  <ion-card-content>
+    <p>{{item.description}}</p>
+    <ion-note>
+      {{item.TimeElapsed}}
+    </ion-note>
+  </ion-card-content>
+
+  <ion-row>
+    <!-- <ion-col> -->
+      <button (click)="likePost(item)" ion-button color="primary" clear medium icon-start>
+        <ion-icon [color]="item.isLiked ? 'danger' : 'dark'" [name]="item.isLiked ? 'heart' : 'heart-outline'"></ion-icon>
+        {{item.likecount}}
+      </button>
+    <!-- </ion-col> -->
+  </ion-row>
+
+</ion-card>
+<!-- </div> -->
+<!-- </ion-list> -->
+</ion-col>
+</ion-row>
+</ion-grid>
+
+<ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+   <ion-infinite-scroll-content></ion-infinite-scroll-content>
+ </ion-infinite-scroll>
+
+</ion-content>
+
+
+
+<style>
+  .social-cards ion-col {
+    padding: 0;
+  }
+</style>
