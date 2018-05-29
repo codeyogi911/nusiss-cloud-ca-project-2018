@@ -15,10 +15,14 @@ export class Home{
   private username: string;
   private lambda:any;
   private users:any;
-
+  public loading:any;
   constructor(public modalCtrl: ModalController,
               public loadingCtrl: LoadingController,
               public globals: GlobalVars) {
+                this.loading = this.loadingCtrl.create({
+                  content: 'Cooking your posts...'
+                });
+                this.loading.present();
     Auth.currentAuthenticatedUser()
     .then(AuthenticatedUser => {
       this.username = AuthenticatedUser.username;
@@ -87,10 +91,6 @@ this.getPosts();
 }
 
 getPosts() {
-  let loading = this.loadingCtrl.create({
-    content: 'Cooking your posts...'
-  });
-  loading.present();
   var Payload = JSON.stringify({"username":this.username});
   var params = {
     FunctionName: 'getPosts2Display', /* required */
@@ -124,7 +124,7 @@ getPosts() {
       element.TimeElapsed = that.getTimeElapsed(element.timestamp);
     });
     that.sortArray(that.posts);
-    loading.dismiss();
+    that.loading.dismiss();
     }
     });
   }
