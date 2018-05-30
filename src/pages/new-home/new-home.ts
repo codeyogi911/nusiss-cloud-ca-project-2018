@@ -51,11 +51,15 @@ this.items = [];
     console.log('Begin async operation');
 
     setTimeout(() => {
-      if (this.posts.length > 10)
+      if (this.posts.length > 10){
       this.items = this.items.concat(this.posts.splice(0,10));
+      this.processPosts();
+    }
       else
+      {
       this.items = this.items.concat(this.posts.splice(0,this.posts.length));
-
+      this.processPosts();
+}
       console.log('Async operation has ended');
       infiniteScroll.complete();
     }, 500);
@@ -124,6 +128,13 @@ this.items = [];
       else    {                           // successful response
       // console.log(data);
       that.posts = JSON.parse(data.Payload);
+      that.sortArray(that.posts);
+
+      if (that.posts.length > 10)
+      that.items = that.items.concat(that.posts.splice(0,10));
+      else
+      that.items = that.items.concat(that.posts.splice(0,that.posts.length));
+
       var Payload = JSON.stringify({});
       var params = {
         FunctionName: 'getUsers', /* required */
@@ -138,21 +149,28 @@ this.items = [];
         // console.log(data);
         that.users = JSON.parse(data.Payload);
         that.globals.setUsers(that.users);
-        that.posts.forEach(function(element){
-        that.getfromS3(element);
-        element.postDate = that.formatDate(element.timestamp);
-        element.TimeElapsed = that.getTimeElapsed(element.timestamp);
-      });
-      that.sortArray(that.posts);
-      if (that.posts.length > 10)
-      that.items = that.items.concat(that.posts.splice(0,10));
-      else
-      that.items = that.items.concat(that.posts.splice(0,that.posts.length));
+        that.processPosts();
+      //   that.items.forEach(function(element){
+      //   that.getfromS3(element);
+      //   element.postDate = that.formatDate(element.timestamp);
+      //   element.TimeElapsed = that.getTimeElapsed(element.timestamp);
+      // });
+
+
       that.loading.dismiss();
       }
       });
     }
     });
+  }
+
+  processPosts(){
+    var that = this;
+    this.items.forEach(function(element){
+    that.getfromS3(element);
+    element.postDate = that.formatDate(element.timestamp);
+    element.TimeElapsed = that.getTimeElapsed(element.timestamp);
+  });
   }
 
   getfromS3(post){
