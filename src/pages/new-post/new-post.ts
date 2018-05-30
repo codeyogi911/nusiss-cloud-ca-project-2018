@@ -2,9 +2,7 @@ import { Component } from '@angular/core';
 import { NavParams, ViewController, Platform, LoadingController, ToastController } from 'ionic-angular';
 import { Storage } from 'aws-amplify';
 import * as $ from 'jquery';
-// import { DynamoDB } from '../../providers/providers';
-// import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-// import AWS from 'aws-sdk';
+import { GlobalVars } from '../../providers/GlobalVars';
 
 
 @Component({
@@ -18,19 +16,17 @@ export class NewPostCreatePage {
   post: any;
   username:string;
   selectedFile: File;
-  private lambda:any;
   private userID:string;
   constructor(
-    // public navCtrl: NavController,
               public navParams: NavParams,
               public viewCtrl: ViewController,
               public platform: Platform,
               public loadingCtrl: LoadingController,
-              public toastCtrl: ToastController) {
+              public toastCtrl: ToastController,
+            public globals: GlobalVars) {
                 this.post = {};
                 this.postID = navParams.get('id');
                 this.username = navParams.get('username');
-                this.lambda = navParams.get('lambda');
                 this.userID = navParams.get('userID')
   }
   cancel() {
@@ -70,25 +66,14 @@ async uploadFile() {
   .then (result => {
 
     loading.setContent('Thinking...');
-    var Payload = JSON.stringify({"username":this.username,"description":this.post.description,
-    "postid":this.postID,"userID":this.userID});
-    var params = {
-      FunctionName: 'createNewPost', /* required */
-      InvocationType: "RequestResponse",
-      LogType: "None",
-      Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
-    };
-    var that = this;
-    this.lambda.invoke(params, function(err, data) {
-      if (err) {
-        console.log(err, err.stack);
-      } // an error occurred
-      else    {                           // successful response
-      console.log(data);
-    loading.dismiss();
-    that.viewCtrl.dismiss(that.post);
-    }
-    });
+
+    this.globals.invokeLambda('createNewPost',
+    {"username":this.username,"description":this.post.description,"postid":this.postID,"userID":this.userID})
+    .then(data => {
+      loading.dismiss();
+      this.viewCtrl.dismiss(this.post);
+    })
+    .catch(err => console.log(err, err.stack));
   })
         .catch(err => {
           console.log(err);

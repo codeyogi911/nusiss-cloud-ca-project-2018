@@ -11,6 +11,18 @@ export class GlobalVars {
   public user:any;
   constructor() {
   }
+  
+  invokeLambda(FunctionName,payload){
+    var Payload = JSON.stringify(payload);
+    var params = {
+      FunctionName: FunctionName,
+      InvocationType: "RequestResponse",
+      LogType: "None",
+      Payload: Payload,
+    };
+    return this.lambda.invoke(params).promise();
+  }
+
 setUser(user){
   this.user = user;
 }

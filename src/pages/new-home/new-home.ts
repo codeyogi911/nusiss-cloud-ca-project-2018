@@ -15,7 +15,6 @@ export class NewHomePage {
   private userID: string;
   private posts: any;
   private username: string;
-  private lambda:any;
   private users:any;
   public loading:any;
   public items:any;
@@ -35,9 +34,8 @@ this.globals.setUserName(AuthenticatedUser.username);
 Auth.currentCredentials()
 .then(credentials => {
 this.userID = credentials.identityId;
-this.lambda = new AWS.Lambda({credentials: credentials, apiVersion: '2015-03-31'});
-this.globals.setLambda(this.lambda);
-this.refreshPosts();
+this.globals.setLambda(new AWS.Lambda({credentials: credentials, apiVersion: '2015-03-31'}));
+this.getPosts();
 }
 )
 .catch(err => console.log(err));
@@ -52,13 +50,13 @@ this.items = [];
 
     setTimeout(() => {
       if (this.posts.length > 10){
-      this.items = this.items.concat(this.posts.splice(0,10));
-      this.processPosts();
+      this.items = this.items.concat(this.processPosts(this.posts.splice(0,10)));
+      // this.processPosts();
     }
       else
       {
-      this.items = this.items.concat(this.posts.splice(0,this.posts.length));
-      this.processPosts();
+      this.items = this.items.concat(this.processPosts(this.posts.splice(0,this.posts.length)));
+      // this.processPosts();
 }
       console.log('Async operation has ended');
       infiniteScroll.complete();
@@ -73,21 +71,8 @@ this.items = [];
     post.likecount++;
     else
     post.likecount--;
-    var Payload = JSON.stringify({"username":this.username,"postid":post.postid,"timestamp":post.timestamp,"isLiked":!inis});
-    var params = {
-      FunctionName: 'likeUpdateFunc', /* required */
-      InvocationType: "RequestResponse",
-      LogType: "None",
-      Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
-    };
-    // var that = this;
-    this.lambda.invoke(params, function(err, data) {
-      if (err) {
-        console.log(err, err.stack);
-        post.isLiked = inis;
-        post.likecount = inic;
-      } // an error occurred
-      else    {
+    this.globals.invokeLambda('likeUpdateFunc',{"username":this.username,"postid":post.postid,"timestamp":post.timestamp,"isLiked":!inis})
+    .then(data => {
       console.log(data);
       if (data.Payload == '200')
       post.isLiked = !inis;
@@ -95,82 +80,57 @@ this.items = [];
         post.isLiked = inis;
         post.likecount = inic;
       }
-
-      }                        // successful response
-  });
+    })
+    .catch(err => {
+      console.log(err, err.stack);
+      post.isLiked = inis;
+      post.likecount = inic;
+    });
   }
 
-    newpost() {
+  newpost() {
       let id = this.generateId();
-      let addModal = this.modalCtrl.create(NewPostCreatePage, {'userID':this.userID,'id':id,'username': this.username,'lambda':this.lambda});
+      let addModal = this.modalCtrl.create(NewPostCreatePage, {'userID':this.userID,'id':id,'username': this.username});
       addModal.onDidDismiss(post => {
         if (!post) { return; }
         this.refreshPosts();
   });
       addModal.present();
-
   }
+
   refreshPosts(){
+    this.items = [];
   this.getPosts();
   }
 
   getPosts() {
-    var Payload = JSON.stringify({"username":this.username});
-    var params = {
-      FunctionName: 'getPosts2Display', /* required */
-      InvocationType: "RequestResponse",
-      LogType: "None",
-      Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
-    };
-    var that = this;
-    this.lambda.invoke(params, function(err, data) {
-      if (err) console.log(err, err.stack); // an error occurred
-      else    {                           // successful response
-      // console.log(data);
-      that.posts = JSON.parse(data.Payload);
-      that.sortArray(that.posts);
+    this.globals.invokeLambda('getPosts2Display',{"username":this.username})
+    .then(data => {
+        this.posts = JSON.parse(data.Payload);
 
-      if (that.posts.length > 10)
-      that.items = that.items.concat(that.posts.splice(0,10));
-      else
-      that.items = that.items.concat(that.posts.splice(0,that.posts.length));
-
-      var Payload = JSON.stringify({});
-      var params = {
-        FunctionName: 'getUsers', /* required */
-        InvocationType: "RequestResponse",
-        LogType: "None",
-        Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
-      };
-      // var that = this;
-      that.lambda.invoke(params, function(err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else    {                           // successful response
-        // console.log(data);
-        that.users = JSON.parse(data.Payload);
-        that.globals.setUsers(that.users);
-        that.processPosts();
-      //   that.items.forEach(function(element){
-      //   that.getfromS3(element);
-      //   element.postDate = that.formatDate(element.timestamp);
-      //   element.TimeElapsed = that.getTimeElapsed(element.timestamp);
-      // });
-
-
-      that.loading.dismiss();
-      }
-      });
-    }
-    });
+        this.globals.invokeLambda('getUsers',{})
+        .then(data => {
+              this.users = JSON.parse(data.Payload);
+              this.globals.setUsers(this.users);
+              if (this.posts.length > 10)
+                this.items = this.items.concat(this.processPosts(this.posts.splice(0,10)));
+              else
+                this.items = this.items.concat(this.processPosts(this.posts.splice(0,this.posts.length)));
+              this.loading.dismiss();
+        })
+        .catch(err => console.log(err, err.stack));
+    })
+    .catch(err => console.log(err, err.stack));
   }
 
-  processPosts(){
+  processPosts(inArray){
     var that = this;
-    this.items.forEach(function(element){
+    inArray.forEach(function(element){
     that.getfromS3(element);
     element.postDate = that.formatDate(element.timestamp);
     element.TimeElapsed = that.getTimeElapsed(element.timestamp);
   });
+  return inArray;
   }
 
   getfromS3(post){
@@ -189,16 +149,6 @@ this.items = [];
         post.image = result;
     })
       .catch(err => console.log(err));
-  }
-
-  sortArray(inArray){
-    inArray.sort(function compare(a,b) {
-    if (a.timestamp > b.timestamp)
-    return -1;
-    if (a.timestamp < b.timestamp)
-    return 1;
-    return 0;
-    });
   }
 
   formatDate(date){
@@ -251,11 +201,4 @@ this.items = [];
     }
     return result.toLowerCase();
   }
-
-
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad NewHomePage');
-  }
-
 }
