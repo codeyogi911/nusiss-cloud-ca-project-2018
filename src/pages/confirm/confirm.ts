@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Auth, Logger } from 'aws-amplify';
 
-import { LoginPage } from '../login/login';
+// import { LoginPage } from '../login/login';
 
 const logger = new Logger('Confirm');
 
@@ -12,7 +12,7 @@ const logger = new Logger('Confirm');
   templateUrl: 'confirm.html'
 })
 export class ConfirmPage {
-  
+
   public code: string;
   public username: string;
 
@@ -22,7 +22,7 @@ export class ConfirmPage {
 
   confirm() {
     Auth.confirmSignUp(this.username, this.code)
-      .then(() => this.navCtrl.push(LoginPage))
+      .then(() => this.navCtrl.push('NewLoginPage'))
       .catch(err => logger.debug('confirm error', err));
   }
 

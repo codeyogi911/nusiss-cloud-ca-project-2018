@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Auth, Logger } from 'aws-amplify';
 
-import { TabsPage } from '../tabs/tabs';
-import { LoginPage } from '../login/login';
+// import { TabsPage } from '../tabs/tabs';
+// import { LoginPage } from '../login/login';
 
 const logger = new Logger('ConfirmSignIn');
 
@@ -23,12 +23,12 @@ export class ConfirmSignInPage {
 
   confirm() {
     Auth.confirmSignIn(this.user, this.code, null)
-      .then(() => this.navCtrl.push(TabsPage))
+      .then(() => this.navCtrl.push('NewTabsPage'))
       .catch(err => logger.debug('confirm error', err));
   }
 
   login() {
-    this.navCtrl.push(LoginPage);
+    this.navCtrl.push('NewLoginPage');
   }
 
 }
