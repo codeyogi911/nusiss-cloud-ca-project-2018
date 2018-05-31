@@ -6,9 +6,9 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
+    <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
     <ion-list *ngFor="let user of users;">
-        <ion-row>
-          <ion-col>
+         <ion-row>
             <ion-item>
               <ion-avatar item-start>
                 <img [src]=user.dp>
@@ -18,7 +18,6 @@
               </ion-label>
               <ion-toggle (ionChange)="notify($event,user.username);" checked={{user.isToggled}}></ion-toggle>
             </ion-item>
-          </ion-col>
         </ion-row>
       </ion-list>
 </ion-content>
