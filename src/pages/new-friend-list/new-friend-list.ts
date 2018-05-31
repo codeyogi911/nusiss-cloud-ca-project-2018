@@ -60,11 +60,6 @@ export class NewFriendListPage {
   }
   populatelist()
   {
-    // let loading = this.loadingCtrl.create({
-    //   content: 'Retrieving...'
-    // });
-    // loading.present();
-    // this.users = this.globals.getUsers();
     this.users = this.globals.getUsers();
     var that = this;
     var following = this.users.find(function(user){
@@ -75,23 +70,6 @@ export class NewFriendListPage {
     this.users.splice(removeIndex, 1);
 
     this.getfromS3(this.users,following);
-  //   var Payload = JSON.stringify({});
-  //   var params = {
-  //     FunctionName: 'getUsers', /* required */
-  //     InvocationType: "RequestResponse",
-  //     LogType: "None",
-  //     Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
-  //   };
-  //   var that = this;
-  //   this.lambda.invoke(params, function(err, data) {
-  //     if (err) console.log(err, err.stack); // an error occurred
-  //     else    {                           // successful response
-  //     console.log(data);
-  //     that.users = JSON.parse(data.Payload);
-  //     that.getfromS3(that.users);
-  //     loading.dismiss();
-  //   }
-  // });
   }
   getfromS3(users,following){
   let list = [];
