@@ -12,7 +12,7 @@ const logger = new Logger('ConfirmSignUp');
   templateUrl: 'confirmSignUp.html'
 })
 export class ConfirmSignUpPage {
-  
+
   public code: string;
   public username: string;
 
@@ -22,7 +22,7 @@ export class ConfirmSignUpPage {
 
   confirm() {
     Auth.confirmSignUp(this.username, this.code)
-      .then(() => this.navCtrl.push(LoginPage))
+      .then(() => this.navCtrl.push('NewLoginPage'))
       .catch(err => logger.debug('confirm error', err));
   }
 

@@ -145,6 +145,12 @@ export class AccountPage {
 
       Storage.put(this.username + '/avatar.jpeg', this.selectedPhoto, { contentType: 'image/jpeg' })
         .then(() => {
+
+
+          this.globals.invokeLambda('updateAvatar',{"username":this.username})
+          .then()
+          .catch();
+
           var Payload = JSON.stringify({"username":this.username});
           var params = {
             FunctionName: 'updateAvatar', /* required */

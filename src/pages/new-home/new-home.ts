@@ -45,12 +45,10 @@ this.items = [];
   }
 
   doRefresh(refresher) {
-    
+
       console.log('Begin async operation', refresher);
       setTimeout(() => {
         console.log('Async operation has ended');
-        // this.refreshPosts(this.);
-        this.items = [];
         this.refreshPosts();
         refresher.complete();
       }, 2000);

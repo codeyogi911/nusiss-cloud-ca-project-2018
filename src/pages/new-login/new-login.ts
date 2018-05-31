@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 import { Auth, Logger } from 'aws-amplify';
 import { ConfirmSignInPage } from '../confirmSignIn/confirmSignIn';
 
@@ -20,7 +20,7 @@ export class NewLoginPage {
   public loginDetails: LoginDetails;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              public loadingCtrl: LoadingController) {
+              public loadingCtrl: LoadingController, private toastCtrl: ToastController) {
     this.loginDetails = new LoginDetails();
   }
 
@@ -43,7 +43,21 @@ export class NewLoginPage {
       })
       .catch(err => {
         logger.debug('errrror', err);
-        this.navCtrl.push('NewSignupPage');
+
+        let toast = this.toastCtrl.create({
+    message: 'Please check username/password or create a new account!',
+    duration: 3000,
+    position: 'top'
+  });
+
+  toast.onDidDismiss(() => {
+    console.log('Dismissed toast');
+  });
+
+  toast.present();
+
+
+        // this.navCtrl.push('NewSignupPage');
       })
       .then(() => loading.dismiss());
   }
@@ -52,8 +66,8 @@ export class NewLoginPage {
     this.navCtrl.push('NewSignupPage');
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad NewLoginPage');
-  }
+  // ionViewDidLoad() {
+  //   console.log('ionViewDidLoad NewLoginPage');
+  // }
 
 }
