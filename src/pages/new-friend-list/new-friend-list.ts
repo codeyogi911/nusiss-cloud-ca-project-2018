@@ -13,11 +13,27 @@ export class NewFriendListPage {
   private users:any;
   private username:string;
   private lambda:any;
+  private users_copy:any;
   constructor(public navCtrl: NavController, public navParams: NavParams,
   public loadingCtrl: LoadingController, public globals: GlobalVars) {
     this.username = this.globals.getUserName();
     this.lambda = this.globals.getLambda();
     this.populatelist();
+  }
+
+  getItems(event)  {
+    // set val to the value of the searchbar
+    let val = event.target.value;
+    // if the value is an empty string don't filter the items
+    if (val && val.trim() != '') {
+      this.users = this.users.filter((item) => {
+        return (item.username.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      })
+    }
+    else{
+      this.users = this.users_copy;
+      return this.users;
+    }
   }
 
   public notify(event,followUser) {
