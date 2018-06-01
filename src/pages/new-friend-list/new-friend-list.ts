@@ -14,6 +14,7 @@ export class NewFriendListPage {
   private username:string;
   private lambda:any;
   private users_copy:any;
+  private loading:any;
   constructor(public navCtrl: NavController, public navParams: NavParams,
   public loadingCtrl: LoadingController, public globals: GlobalVars, public app: App) {
 
