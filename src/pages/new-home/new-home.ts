@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, LoadingController, App } from 'ionic-angular';
 import { NewPostCreatePage } from '../new-post/new-post';
 import { Auth, Storage } from 'aws-amplify';
 import { GlobalVars } from '../../providers/GlobalVars';
@@ -20,28 +20,7 @@ export class NewHomePage {
   public items:any;
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,
               public loadingCtrl: LoadingController,
-              public globals: GlobalVars) {
-
-      this.loading = this.loadingCtrl.create({
-        content: 'Cooking your posts...'
-      });
-      this.loading.present();
-Auth.currentAuthenticatedUser()
-.then(AuthenticatedUser => {
-this.username = AuthenticatedUser.username;
-this.globals.setUserName(AuthenticatedUser.username);
-
-Auth.currentCredentials()
-.then(credentials => {
-this.userID = credentials.identityId;
-this.globals.setLambda(new AWS.Lambda({credentials: credentials, apiVersion: '2015-03-31'}));
-this.getPosts();
-}
-)
-.catch(err => console.log(err));
-})
-.catch(err => console.log(err));
-this.items = [];
+              public globals: GlobalVars, public app: App) {
   }
 
   doRefresh(refresher) {
@@ -113,6 +92,10 @@ this.items = [];
   }
 
   getPosts() {
+    this.loading = this.loadingCtrl.create({
+      content: 'Cooking your posts...'
+    });
+    this.loading.present();
     this.globals.invokeLambda('getPosts2Display',{"username":this.username})
     .then(data => {
         this.posts = JSON.parse(data.Payload);
@@ -147,7 +130,6 @@ this.items = [];
     var user = this.users.find(function(user){
       return user.username == post.username;
     });
-    this.globals.setUser(user);
     Storage.get(user.avatarPath, { level: 'public' })
       .then(url => post.avatarPhoto = (url as string))
       .catch(err => console.log(err));
@@ -209,5 +191,20 @@ this.items = [];
       result += chars[randoms[i] % charLength];
     }
     return result.toLowerCase();
+  }
+  ionViewWillEnter() {
+    Auth.currentCredentials()
+    .then(credentials => {
+      Auth.currentAuthenticatedUser()
+      .then(AuthenticatedUser => {
+      this.username = AuthenticatedUser.username;
+      this.globals.setUserName(AuthenticatedUser.username);
+      this.getPosts();
+    });
+    this.userID = credentials.identityId;
+    this.globals.setLambda(new AWS.Lambda({credentials: credentials, apiVersion: '2015-03-31'}));
+  })
+  .catch(err => this.app.getRootNav().setRoot('NewLoginPage'));
+  this.items = [];
   }
 }

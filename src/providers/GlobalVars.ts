@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
-// import { Auth } from 'aws-amplify';
+// import { NavController } from 'ionic-angular';
+import { Auth } from 'aws-amplify';
 // import AWS from 'aws-sdk';
 
 
@@ -11,7 +12,16 @@ export class GlobalVars {
   public user:any;
   constructor() {
   }
-  
+
+  // Authorize() {
+  //   return Auth.currentCredentials()
+  //   // .then(() => {
+  //   //   Auth.currentAuthenticatedUser()
+  //   //   .catch(err => console.log(err));
+  //   // })
+  //   .catch(err => this.navCtrl.setRoot('NewLoginPage'));
+  // }
+
   invokeLambda(FunctionName,payload){
     var Payload = JSON.stringify(payload);
     var params = {

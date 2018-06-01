@@ -21,58 +21,56 @@ export class AccountPage {
   public username: string;
   public attributes: any;
   public lambda: any;
+  public user: any;
 
   constructor(public navCtrl: NavController,
               public camera: Camera,
               public loadingCtrl: LoadingController, public globals: GlobalVars) {
-    this.attributes = [];
-    this.avatarPhoto = null;
-    this.selectedPhoto = null;
 
-    Auth.currentUserInfo()
-      .then(info => {
-        // this.userId = info.id;
-        this.username = info.username;
-        this.attributes = [];
-        if (info['email']) { this.attributes.push({ name: 'email', value: info['email']}); }
-        if (info['phone_number']) { this.attributes.push({ name: 'phone_number', value: info['phone_number']}); }
-        this.refreshAvatar();
-      });
-      this.lambda = this.globals.getLambda();
+  }
+
+  ionViewWillEnter() {
+    Auth.currentCredentials()
+    .then(() => {
+      this.attributes = [];
+      this.avatarPhoto = null;
+      this.selectedPhoto = null;
+
+      Auth.currentUserInfo()
+        .then(info => {
+          this.globals.invokeLambda('getUsers',{})
+          .then(data => {
+            var that = this;
+            var users = JSON.parse(data.Payload);
+            this.user = users.find(function(user){
+              return user.username == that.username;
+            });
+            this.refreshAvatar();
+          })
+        .catch(err => console.log(err, err.stack));
+
+          // this.userId = info.id;
+          this.username = info.username;
+          this.attributes = [];
+          if (info['email']) { this.attributes.push({ name: 'email', value: info['email']}); }
+          if (info['phone_number']) { this.attributes.push({ name: 'phone_number', value: info['phone_number']}); }
+          // this.refreshAvatar();
+        });
+        this.lambda = this.globals.getLambda();
+    })
+  .catch(err => this.app.getRootNav().setRoot('NewLoginPage'));
   }
 
   refreshAvatar() {
-    // var user = this.users.find(function(user){
-    //   return user.username == post.username;
-    // });
-    var user = this.globals.getUser();
-    Storage.get(user.avatarPath, { level: 'public' })
-      .then(url => this.avatarPhoto = (url as string))
-      .catch(err => console.log(err));
-//     var Payload = JSON.stringify({"username":this.username});
-//     var params = {
-//       FunctionName: 'updateAvatar', /* required */
-//       InvocationType: "RequestResponse",
-//       LogType: "None",
-//       Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
-//     };
-// this.lambda.invoke(params, function(err, data) {
-//   if (err) console.log(err, err.stack);
-//   else {
-//     console.log(data);
-    // Storage.get(this.username + '/avatar_thumb.jpg', { level: 'public' })
-    //   .then(url => this.avatarPhoto = (url as string));
-//   }
-//
-//
-//
-// });
+          // var that = this;
+          // var users = this.globals.getUsers();
+          // var user = users.find(function(user){
+          //   return user.username == that.username;
+          // });
+          Storage.get(this.user.avatarPath, { level: 'public' })
+            .then(url => this.avatarPhoto = (url as string))
+            .catch(err => console.log(err));
 }
-
-  // refreshAvatar() {
-  //   Storage.get(this.userId + '/avatar')
-  //     .then(url => this.avatarPhoto = url);
-  // }
 
   dataURItoBlob(dataURI) {
     // code adapted from: http://stackoverflow.com/questions/33486352/cant-upload-image-to-aws-s3-from-ionic-camera
@@ -111,29 +109,17 @@ export class AccountPage {
 
     const file = files[0];
     const { type } = file;
-    var that = this;
+    // var that = this;
     Storage.put(this.username + '/avatar.jpeg', file, { contentType: type })
       .then(() => {
-        var Payload = JSON.stringify({"username":this.username});
-        var params = {
-          FunctionName: 'updateAvatar', /* required */
-          InvocationType: "RequestResponse",
-          LogType: "None",
-          Payload: Payload /* Strings will be Base-64 encoded on your behalf */,
-        };
-    this.lambda.invoke(params, function(err, data) {
-      if (err) console.log(err, err.stack);
-      else {
-        console.log(data);
-        var user = this.globals.getUser();
-        user.avatarPath = this.username + '/avatar.jpeg';
-        this.globals.setUser(user);
-        that.refreshAvatar();
-      }
-    });
 
-      })
-      .catch(err => logger.error(err));
+        this.globals.invokeLambda('updateAvatar',{"username":this.username})
+        .then(data => {
+            this.user.avatarPath = this.username + '/avatar.jpeg';
+            this.refreshAvatar();
+          });
+        })
+        .catch(err => console.log(err, err.stack));
   }
 
   upload() {
@@ -162,9 +148,9 @@ export class AccountPage {
         if (err) console.log(err, err.stack);
         else {
           console.log(data);
-            var user = this.globals.getUser();
-            user.avatarPath = this.username + '/avatar.jpeg';
-            this.globals.setUser(user);
+            // var user = this.globals.getUser();
+            this.user.avatarPath = this.username + '/avatar.jpeg';
+            // this.globals.setUser(user);
             this.refreshAvatar()
             loading.dismiss();
         }

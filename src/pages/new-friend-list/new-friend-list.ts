@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
-import { Storage } from 'aws-amplify';
+import { IonicPage, NavController, NavParams, LoadingController, App } from 'ionic-angular';
+import { Auth, Storage } from 'aws-amplify';
 import { GlobalVars } from '../../providers/GlobalVars';
 
 
@@ -15,10 +15,8 @@ export class NewFriendListPage {
   private lambda:any;
   private users_copy:any;
   constructor(public navCtrl: NavController, public navParams: NavParams,
-  public loadingCtrl: LoadingController, public globals: GlobalVars) {
-    this.username = this.globals.getUserName();
-    this.lambda = this.globals.getLambda();
-    this.populatelist();
+  public loadingCtrl: LoadingController, public globals: GlobalVars, public app: App) {
+
   }
 
   getItems(event)  {
@@ -110,8 +108,14 @@ export class NewFriendListPage {
   }
 
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad NewFriendListPage');
+  ionViewWillEnter() {
+    Auth.currentCredentials()
+    .then(() => {
+      this.username = this.globals.getUserName();
+      this.lambda = this.globals.getLambda();
+      this.populatelist();
+    })
+  .catch(err => this.app.getRootNav().setRoot('NewLoginPage'));
   }
 
 }
