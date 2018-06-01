@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { LoadingController, NavController } from 'ionic-angular';
+import { LoadingController, NavController, App } from 'ionic-angular';
 import { Auth, Storage, Logger } from 'aws-amplify';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -25,7 +25,8 @@ export class AccountPage {
 
   constructor(public navCtrl: NavController,
               public camera: Camera,
-              public loadingCtrl: LoadingController, public globals: GlobalVars) {
+              public loadingCtrl: LoadingController, public globals: GlobalVars,
+            public app: App) {
 
   }
 

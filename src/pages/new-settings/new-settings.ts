@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
-import { App } from 'ionic-angular';
+import { IonicPage, App } from 'ionic-angular';
+// import { App } from 'ionic-angular';
 import { Auth } from 'aws-amplify';
 import { AboutPage } from '../about/about';
 import { AccountPage } from '../account/account';

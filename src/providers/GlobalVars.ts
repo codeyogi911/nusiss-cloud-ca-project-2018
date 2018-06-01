@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 // import { NavController } from 'ionic-angular';
-import { Auth } from 'aws-amplify';
+// import { Auth } from 'aws-amplify';
 // import AWS from 'aws-sdk';
 
 
