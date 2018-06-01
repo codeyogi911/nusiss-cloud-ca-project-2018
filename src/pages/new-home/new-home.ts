@@ -102,7 +102,7 @@ export class NewHomePage {
         this.posts = JSON.parse(data.Payload);
         if (this.posts.length < 1){
           this.loading.dismiss();
-          this.NoPostText = true;   
+          this.NoPostText = true;
         }
         else
         {

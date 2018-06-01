@@ -55,9 +55,6 @@ export class NewLoginPage {
   });
 
   toast.present();
-
-
-        // this.navCtrl.push('NewSignupPage');
       })
       .then(() => loading.dismiss());
   }
@@ -65,9 +62,5 @@ export class NewLoginPage {
   signup() {
     this.navCtrl.push('NewSignupPage');
   }
-
-  // ionViewDidLoad() {
-  //   console.log('ionViewDidLoad NewLoginPage');
-  // }
 
 }
