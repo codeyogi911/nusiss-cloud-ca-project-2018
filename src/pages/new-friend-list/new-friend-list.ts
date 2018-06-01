@@ -24,6 +24,7 @@ export class NewFriendListPage {
     let val = event.target.value;
     // if the value is an empty string don't filter the items
     if (val && val.trim() != '') {
+      this.users = this.users_copy;
       this.users = this.users.filter((item) => {
         return (item.username.toLowerCase().indexOf(val.toLowerCase()) > -1);
       })
