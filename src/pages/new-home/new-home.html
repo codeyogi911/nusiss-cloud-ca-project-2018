@@ -15,6 +15,8 @@
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+  <h2 ion-text class="text" color="dynamicColor" wrap *ngIf="NoPostText">Its lonely here!\nTry creating some of your own using the + icon</h2>
+  <!-- <ion-title visible='false' wrap>Its lonely here! Try creating some of your own using the + icon on top right or see what others are posting by following some of our other users</ion-title> -->
       <ion-grid>
         <ion-row wrap>
 

@@ -75,7 +75,15 @@ export class NewFriendListPage {
   }
   populatelist()
   {
-    this.users = this.globals.getUsers();
+    this.loading = this.loadingCtrl.create({
+      content: 'Retrieving...'
+    });
+    this.loading.present();
+    this.globals.invokeLambda('getUsers',{})
+    .then(data => {
+          this.users = JSON.parse(data.Payload);
+          // this.globals.setUsers(this.users);
+    // this.users = this.globals.getUsers();
     var that = this;
     var following = this.users.find(function(user){
       return user.username == that.username;
@@ -86,7 +94,10 @@ export class NewFriendListPage {
 
     this.getfromS3(this.users,following);
     this.users_copy = this.users;
+    this.loading.dismiss();
+    });
   }
+
   getfromS3(users,following){
   let list = [];
   users.forEach(function(element){

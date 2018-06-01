@@ -18,6 +18,7 @@ export class NewHomePage {
   private users:any;
   public loading:any;
   public items:any;
+  private NoPostText:boolean;
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,
               public loadingCtrl: LoadingController,
               public globals: GlobalVars, public app: App) {
@@ -99,7 +100,13 @@ export class NewHomePage {
     this.globals.invokeLambda('getPosts2Display',{"username":this.username})
     .then(data => {
         this.posts = JSON.parse(data.Payload);
-
+        if (this.posts.length < 1){
+          this.loading.dismiss();
+          this.NoPostText = true;   
+        }
+        else
+        {
+          this.NoPostText = false;
         this.globals.invokeLambda('getUsers',{})
         .then(data => {
               this.users = JSON.parse(data.Payload);
@@ -111,6 +118,7 @@ export class NewHomePage {
               this.loading.dismiss();
         })
         .catch(err => console.log(err, err.stack));
+      }
     })
     .catch(err => console.log(err, err.stack));
   }

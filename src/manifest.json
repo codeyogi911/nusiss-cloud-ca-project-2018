@@ -1,10 +1,10 @@
 {
-  "name": "Shutterbug",
-  "short_name": "Shutterbug",
+  "name": "Shutterbot",
+  "short_name": "Shutbot",
   "start_url": "index.html",
   "display": "standalone",
   "icons": [{
-    "src": "assets/logo-colored.png",
+    "src": "assets/logo.png",
     "sizes": "512x512",
     "type": "image/png"
   }],
