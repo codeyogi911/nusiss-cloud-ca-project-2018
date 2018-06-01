@@ -86,6 +86,7 @@ export class NewFriendListPage {
     this.users.splice(removeIndex, 1);
 
     this.getfromS3(this.users,following);
+    this.users_copy = this.users;
   }
   getfromS3(users,following){
   let list = [];
