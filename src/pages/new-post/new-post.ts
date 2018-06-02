@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavParams, ViewController, Platform, LoadingController, ToastController } from 'ionic-angular';
+import { NavParams, ViewController, Platform, LoadingController, ToastController, AlertController } from 'ionic-angular';
 import { Storage } from 'aws-amplify';
 import * as $ from 'jquery';
 import { GlobalVars } from '../../providers/GlobalVars';
@@ -23,7 +23,8 @@ export class NewPostCreatePage {
               public platform: Platform,
               public loadingCtrl: LoadingController,
               public toastCtrl: ToastController,
-            public globals: GlobalVars) {
+              public globals: GlobalVars,
+              private alertCtrl: AlertController) {
                 this.post = {};
                 this.postID = navParams.get('id');
                 this.username = navParams.get('username');
@@ -70,8 +71,28 @@ async uploadFile() {
     this.globals.invokeLambda('createNewPost',
     {"username":this.username,"description":this.post.description,"postid":this.postID,"userID":this.userID})
     .then(data => {
-      loading.dismiss();
-      this.viewCtrl.dismiss(this.post);
+      if (data.FunctionError == "Handled"){
+        loading.dismiss();
+        var res = JSON.parse(data.Payload);
+        let alert = this.alertCtrl.create({
+          title: 'Image Compliance!',
+          subTitle: res.errorMessage,
+          buttons: [{
+        text: 'Dismiss',
+        // role: 'cancel',
+        handler: () => {
+
+        this.viewCtrl.dismiss(this.post);
+        }
+      }]
+      });
+        alert.present();
+      }
+      else {
+        loading.dismiss();
+        this.viewCtrl.dismiss(this.post);
+      }
+
     })
     .catch(err => console.log(err, err.stack));
   })
