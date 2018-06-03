@@ -26,7 +26,7 @@ export class ConfirmSignUpPage {
       .catch(err => {
         logger.debug('confirm error', err);
         let toast = this.toastCtrl.create({
-            message: 'Invalid Confrimation Code!',
+            message: 'Invalid Confirmation Code!',
             duration: 3000,
             position: 'top'
             });
