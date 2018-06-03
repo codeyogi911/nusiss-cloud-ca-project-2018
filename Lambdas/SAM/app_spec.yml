@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Web services for NUS ISS Cloud CA project.
+Resources:
+  likeUpdateFunc:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.likeUpdateFunc
+      Runtime: nodejs6.1
+      Role: arn:aws:iam::673190570450:role/lambda_likeUpdate
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref posts
+
+  updateAvatar:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.updateAvatar
+      Runtime: nodejs6.1
+      Role: arn:aws:iam::673190570450:role/lambda_updateAvatar
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref users
+
+  imagetagging:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.imagetagging
+      Runtime: nodejs6.1
+      Role: arn:aws:iam::673190570450:role/lambda_Rekongnition
+      Environment:
+        Variables:
+          bucket_name: nuscloudca-userfiles-mobilehub-726174774
+
+  posts:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+       SortKey:
+         Name: timestamp
+         Type: Number
+       PrimaryKey:
+         Name: postid
+         Type: String
+       ProvisionedThroughput:
+         ReadCapacityUnits: 5
+         WriteCapacityUnits: 5
+  users:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+       PrimaryKey:
+         Name: username
+         Type: String
+       ProvisionedThroughput:
+         ReadCapacityUnits: 5
+         WriteCapacityUnits: 5
