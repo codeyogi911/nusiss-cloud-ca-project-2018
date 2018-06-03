@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { Auth, Logger } from 'aws-amplify';
 
 // import { LoginPage } from '../login/login';
@@ -16,14 +16,28 @@ export class ConfirmSignUpPage {
   public code: string;
   public username: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private toastCtrl: ToastController) {
     this.username = navParams.get('username');
   }
 
   confirm() {
     Auth.confirmSignUp(this.username, this.code)
       .then(() => this.navCtrl.push('NewLoginPage'))
-      .catch(err => logger.debug('confirm error', err));
+      .catch(err => {
+        logger.debug('confirm error', err);
+        let toast = this.toastCtrl.create({
+            message: 'Invalid Confrimation Code!',
+            duration: 3000,
+            position: 'top'
+            });
+
+        toast.onDidDismiss(() => {
+        console.log('Dismissed toast');
+        });
+
+        toast.present();
+      });
+      // .then(() => loading.dismiss());
   }
 
   resendCode() {
